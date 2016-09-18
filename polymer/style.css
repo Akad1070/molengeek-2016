@@ -18,13 +18,10 @@ google-map{
 }
 
 paper-card {
-  /*position: absolute;*/
-  /*bottom: 25px;*/
-  /*left: 25px;*/
-  /*z-index: 1;*/
-  position: fixed;
-  bottom: 0;
-  right: 0;
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  z-index: 1;
 }
 
 section {
@@ -65,21 +62,3 @@ paper-fab {
   z-index: 1;
 }
 
-paper-tabs {
-  
-  margin-top: 16px;
-  background-color: #5677fc;
-  color: #fff;
-}
-
-
-/* Other styles that make things more pleasant.
-   These could instead be added in styles.css since they
-   do not use any Polymer styling features. */
-paper-tab iron-icon {
-  margin-right: 10px;
-}
-paper-tab.iron-selected {
-  background: rgb(66, 133, 244);
-  color: #ffff8d;
-}

@@ -12,61 +12,83 @@
     <link rel="import" href="bower_components/paper-item/paper-icon-item.html">
     <link rel="import" href="bower_components/paper-input/paper-input.html">
     <link rel="import" href="bower_components/paper-card/paper-card.html">
+    <link rel="import" href="bower_components/iron-icons/maps-icons.html">
+    <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
     
     <link rel="stylesheet" href="style.css">
+    <style is="custom-style">
+      paper-tabs {
+        --paper-tabs-selection-bar-color: #0D47A1;
+        margin-top: 16px;
+      }
+      paper-tab {
+        --paper-tab-ink: #BBDEFB;
+      }
+  
+      /* Other styles that make things more pleasant.
+         These could instead be added in styles.css since they
+         do not use any Polymer styling features. */
+      paper-tab iron-icon {
+        margin-right: 10px;
+      }
+      paper-tab.iron-selected {
+        background: rgb(66, 133, 244);
+        color: white;
+      }
+    </style>
   
   </head>
   <body>
     
     <template is="dom-bind">
-      <google-map  
-        map="{{map}}" 
-        latitude="50.850" longitude="4.317" 
-        zoom="13"  
-        disable-default-ui
-        api-key="AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs">
+      <google-map map="{{map}}" latitude="50.855695" longitude="4.342831" zoom="17" disable-default-ui    api-key="AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs">
+        <google-map-marker animation="BOUNCE" latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante" icon="../images/warning-symbol.png" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Largeur du trottoir insuffisante</google-map-marker>
+        <google-map-marker animation="BOUNCE" latitude="50.855632" longitude="4.342368" title="Obstacle à la chaîne de déplacement" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Obstacle à la chaîne de déplacement</google-map-marker>
+        <google-map-marker animation="BOUNCE" latitude="50.835712" longitude="4.289018" title="Obstacle à la chaîne de déplacement" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Obstacle à la chaîne de déplacement</google-map-marker>
       </google-map>
       
       <google-map-directions map="{{map}}"
-        start-address="{{addresOrigin}}"
+        start-address="{{addressOrigin}}"
         end-address="{{addresDest}}"
+        travel-mode="[[travelMode]]"
         api-key="AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs">
         
       </google-map-directions>
       
-      <paper-card elevation="2"> <!-- elevation controls the amount of box shadow -->
+      <paper-card elevation="1"> <!-- elevation controls the amount of box shadow -->
         <paper-icon-item>
           <iron-icon icon="search" item-icon></iron-icon>
-          <paper-input label="Depart" value="{{addresOrigin}}"></paper-input>
+          <paper-input label="Depart" value="{{addressOrigin}}"></paper-input>
         </paper-icon-item>
         <paper-icon-item>
           <iron-icon icon="search" item-icon></iron-icon>
           <paper-input label="Destination" value="{{addresDest}}"></paper-input>
         </paper-icon-item>
-        <paper-tabs selected="0">
-          
-          
-      <paper-tab>
-        <iron-icon icon="maps:directions-car"></iron-icon>
-        <span>VOITURE</span>
-      </paper-tab>
-      <paper-tab>
-        <iron-icon icon="maps:directions-walk"></iron-icon>
-        <span>A PIED</span>
-      </paper-tab>
-      <paper-tab>
-        <iron-icon icon="maps:icons:accessible"></iron-icon>
-        <span>EN CHAISE</span>
-      </paper-tab>
-      <paper-tab>
-        <iron-icon icon="maps:directions-transit"></iron-icon>
-        <span>TRANSPORT</span>
-      </paper-tab>
-    </paper-tabs>
+
+      <paper-tabs selected="{{travelMode}}" attr-for-selected="label">
+        <paper-tab label="DRIVING">
+          <iron-icon icon="maps:directions-car"></iron-icon>
+          <span>VOITURE</span>
+        </paper-tab>
+        
+        <paper-tab label="WALKING">
+          <iron-icon icon="maps:icons:accessible"></iron-icon>
+          <span>EN CHAISE</span>
+        </paper-tab>
+        
+        <paper-tab label="WALKING">
+          <iron-icon icon="icons:accessibility"></iron-icon>
+          <span>A PIED</span>
+        </paper-tab>
+        
+        <paper-tab  label="TRANSIT">
+          <iron-icon icon="maps:directions-transit"></iron-icon>
+          <span>TRANSPORT</span>
+        </paper-tab>
         
         
-      </paper-card>
-    
+      </paper-tabs>
+
   </template>
   
     <script>
