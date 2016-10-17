@@ -14,30 +14,25 @@
 <body>
   
   
-	<form method="post">
-		<div>
-			<label for="nom">Origine :</label>
-			<input type ="text" id="adress-origin" name="nom" value="Rue BonneVie, 10 1081 Molenbeek">
-            <br/>
-			<label for="nom">Destination :</label>
-			<input type ="text" id="adress-dest" name="nom" value="Rue Securité 5, 1081 Koekelberg">
-        
-            
-
-			<div>	
-				<button type="car" class="btnSend">Itinéaire en voiture</button>
-				<button type="customCar" class="btnSend">Itinéaire en STIB</button>
-			</div>
-		</div>
-	</form>
-  
-  <div id="result">
-  </div>
-  
-  
-  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs" async></script>
-  <script src="app.js"></script>
+	<div id="destinationForm">
+            <form action="" method="GET" name="direction" id="direction" >
+                <label>Adresse de départ :</label>
+                <input type="text" name="origin" id="address-origin" autocomplete="on">
+                <label>Destination :</label>
+                <input type="text" name="destination" id="address-destination" autocomplete="on">
+                <input type="button" value="Calculer l'itinéraire" onclick="javascript:calculate()">
+            </form>
+        </div>
+        <div id="panel_details"></div>
+        <div id="map">
+            <p>Chargement en cours de la carte. Veuillez remplir les adresses pour un itinéraire</p>
+        </div>
+    </div>
+    
+    <!-- Include Javascript -->
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?language=fr&key=AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs"></script>
+    <script src="molengeek.js"></script>
   
 </body>
 

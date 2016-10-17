@@ -1,0 +1,380 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-input/iron-input.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-marker.html">
+<link rel="import" href="../bower_components/google-map/google-map-directions.html">
+<link rel="import" href="my-icons.html">
+
+
+  <link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+  <link rel="import" href="/bower_components/iron-icons/maps-icons.html">
+  <link rel="import" href="/bower_components/iron-icons/social-icons.html">
+
+  <link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+  <link rel="import" href="/bower_components/iron-icons/maps-icons.html">
+
+  <script>
+      var fuckThisMap;
+      var fuckThisButton;
+      var fieldA;
+      var fieldB;
+      var directionsDisplay;
+      var directionsService;
+
+      var fuckthisfuckingshit = false;
+
+      function calcRoute() {
+        var start = fieldA.children[0].value;
+        var end = fieldB.children[0].value;
+        start = start.startsWith("UGC") ? "50.851452, 4.352796" : "";
+        end = end.startsWith("Phare") ? "50.855559, 4.342756" : "";
+        var request = {
+          origin: start,
+          destination: end,
+          travelMode: 'TRANSIT'
+        };
+        directionsService.route(request, function(result, status) {
+          if (status == 'OK') {
+            directionsDisplay.setDirections(result);
+          }
+        });
+     }
+
+     function calcRoute2() {
+         var start = fieldA.children[0].value;
+         var end = fieldB.children[0].value;
+         if (fuckthisfuckingshit) {
+            start = "50.852177, 4.347957";
+            end = "50.855559, 4.342756";
+         } else {
+             start = start.startsWith("UGC") ? "50.851452, 4.352796" : start;
+             end = "50.852177, 4.347957";
+             fuckthisfuckingshit = true;
+         }
+         var request = {
+           origin: start,
+           destination: end,
+           travelMode: 'TRANSIT'
+         };
+         directionsService.route(request, function(result, status) {
+           if (status == 'OK') {
+             directionsDisplay.setDirections(result);
+           }
+         });
+     }
+   </script>
+
+   <script defer
+     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0iIVlNA4ZmseMcX0ajXNl3RwaDsTEtCM&callback=initMap">
+   </script>
+
+<dom-module id="my-app" is="dom-bind">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+        display: block;
+      }
+
+      app-header {
+        color: #fff;
+        background-color: var(--app-primary-color);
+      }
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        margin: 0 20px;
+      }
+
+      .drawer-list a {
+        display: block;
+
+        padding: 0 16px;
+
+        text-decoration: none;
+
+        color: var(--app-secondary-color);
+
+        line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {
+        color: black;
+
+        font-weight: bold;
+      }
+
+      paper-button.custom:hover {
+        background-color: var(--paper-indigo-100);
+      }
+    </style>
+
+        <app-drawer-layout fullbleed>
+
+          <!-- Main content -->
+          <app-header-layout has-scrolling-region>
+
+            <app-header condenses reveals effects="waterfall">
+              <app-toolbar>
+                <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
+                <div style="padding-left:2%" main-title>StreetAccess</div>
+              </app-toolbar>
+            </app-header>
+
+            <div id="map" style="height:100%;width:100%;position:absolute"></div>
+
+            <paper-material elevation="2" style="width:70%; height:5.8%; margin-left:15%; margin-right:15%; margin-top:10px; margin-bottom:10px;">
+               <input id="pointAField" is="iron-input" placeholder="Start" bind-value="{{pointA}}" style="width:98.5%; border:0px; padding:10px; font-size:20pt">
+            </paper-material>
+
+            <paper-material elevation="2" style="width:70%; height:5.8%; margin-left:15%; margin-right:15%; margin-top:20px; margin-bottom:10px;">
+               <input id="pointBField" is="iron-input" placeholder="Destination" bind-value="{{pointB}}" style="width:98.5%; border:0px; padding:10px; font-size:20pt">
+            </paper-material>
+
+            <paper-button style="background-color:#ddf;margin-left:15%;margin-top:1%" toggles raised onclick="transportMode = (transportMode + 1) % 2; fuckThisButton.style.backgroundColor = transportModeColors[transportMode];fuckThisButton.innerHTML = transportModes[transportMode];">
+               Wheelchair
+            </paper-button>
+
+            <paper-button style="background-color:#ddf;margin-left:15%;margin-top:1%" toggles raised onclick="calcRoute2()">
+               Avoid selected obstacles
+            </paper-button>
+
+            <paper-button style="background-color:#ddf;margin-left:15%;margin-top:1%" toggles raised onclick="calcRoute();">
+               Search
+            </paper-button>
+
+
+
+          </app-header-layout>
+        </app-drawer-layout>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app',
+
+      properties: {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        }
+      },
+
+      observers: [
+        '_routePageChanged(routeData.page)'
+      ],
+
+      _routePageChanged: function(page) {
+        this.page = page || 'view1';
+      },
+
+      _pageChanged: function(page) {
+        // Load page import on demand. Show 404 page if fails
+        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+      },
+
+      _showPage404: function() {
+        this.page = 'view404';
+     }
+    });
+
+    var transportMode = 0;
+    var transportModes = ["Wheelchair", "Public Transports"];
+    var transportModeColors = ["#ddf","#dfd"];
+    var transportModeIcons = ["accessible","directions-subway"];
+    var obstacles_toAvoid = [];
+    var template = document.querySelector('template');
+
+
+    var map;
+
+    setTimeout(function() {
+      fuckThisMap = document.body.children[0].shadowRoot.children[1].children[0].children[1];
+      fuckThisButton = document.body.children[0].shadowRoot.children[1].children[0].children[4];
+      fieldA = document.body.children[0].shadowRoot.children[1].children[0].children[2];
+      fieldB = document.body.children[0].shadowRoot.children[1].children[0].children[3];
+   }, 2000);
+
+
+   function initMap() {
+      setTimeout(function() {
+         directionsDisplay = new google.maps.DirectionsRenderer();
+         directionsService = new google.maps.DirectionsService();
+         map = new google.maps.Map(fuckThisMap, {
+         center: {lat: 50.853656, lng: 4.347112},
+         zoom: 17
+         });
+
+         var marker0 = new google.maps.Marker({
+            position: new google.maps.LatLng(50.850092, 4.352189),
+            title:"Pas d'accès par ascenseur à la station de métro",
+         	icon: "../images/warning-symbol.png",
+         	value: "Pas d'accès par ascenseur à la station de métro"
+         });
+
+         var marker1 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.836387, 4.314902),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker2 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.836387, 4.313466),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker3 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.836716, 4.313386),
+           title:"Longueur de la pente supérieure à 12 %",
+          icon: "../images/warning-symbol.png",
+          value: "Longueur de la pente supérieure à 12 %"
+         });
+
+         var marker4 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.836670, 4.328279),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker5 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.827000431344, 4.26621290480807),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker6 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.8271572824181, 4.26635045573425),
+           title:"Pas d'inflexion de trottoir pour la traversée piétonne",
+          icon: "../images/warning-symbol.png",
+          value: "Pas d'inflexion de trottoir pour la traversée piétonne"
+         });
+
+         var marker7 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.8175194307652, 4.28388682566695),
+           title:"Largeur du trottoir insuffisante",
+          icon: "../images/warning-symbol.png",
+          value: "Largeur du trottoir insuffisante"
+         });
+
+         var marker8 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.8222967037932, 4.2958956344048),
+           title:"Largeur du trottoir insuffisante",
+          icon: "../images/warning-symbol.png",
+          value: "Largeur du trottoir insuffisante"
+         });
+
+         var marker9 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.834632, 4.321168),
+           title:"Largeur du trottoir insuffisante",
+          icon: "../images/warning-symbol.png",
+          value: "Largeur du trottoir insuffisante"
+         });
+
+         var marker10 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.844632, 4.326168),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker11 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.835712, 4.289018),
+           title:"Obstacle à la chaîne de déplacement",
+          icon: "../images/warning-symbol.png",
+          value: "Obstacle à la chaîne de déplacement"
+         });
+
+         var marker12 = new google.maps.Marker({
+           position: new google.maps.LatLng(50.851076, 4.350152),
+           title:"Largeur du trottoir insuffisante",
+          icon: "../images/warning-symbol.png",
+          value: "Largeur du trottoir insuffisante"
+         });
+         var markersList = [marker1, marker2, marker3,marker4, marker5, marker6,marker7, marker8, marker9,marker10, marker11, marker12, marker0];
+         var windows = [];
+         for (var i = 0; i < markersList.length; i++) {
+            var marker = markersList[i];
+            marker.setMap(map);
+            var infowindow = new google.maps.InfoWindow({
+               content: marker.title
+            });
+            windows.push(infowindow);
+         }
+         google.maps.event.addListener(marker0, "click", function() {
+            windows[12].open(map,marker0);
+         });
+         google.maps.event.addListener(marker1, 'click', function() {
+            windows[0].open(map,marker1);
+         });
+         google.maps.event.addListener(marker2, 'click', function() {
+            windows[1].open(map,marker2);
+         });
+         google.maps.event.addListener(marker3, 'click', function() {
+            windows[2].open(map,marker3);
+         });
+         google.maps.event.addListener(marker4, 'click', function() {
+            windows[3].open(map,marker4);
+         });
+         google.maps.event.addListener(marker5, 'click', function() {
+            windows[4].open(map,marker5);
+         });
+         google.maps.event.addListener(marker6, 'click', function() {
+            windows[5].open(map,marker6);
+         });
+         google.maps.event.addListener(marker7, 'click', function() {
+            windows[6].open(map,marker7);
+         });
+         google.maps.event.addListener(marker8, 'click', function() {
+            windows[7].open(map,marker8);
+         });
+         google.maps.event.addListener(marker9, 'click', function() {
+            windows[8].open(map,marker9);
+         });
+         google.maps.event.addListener(marker10, 'click', function() {
+            windows[9].open(map,marker10);
+         });
+         google.maps.event.addListener(marker11, 'click', function() {
+            windows[10].open(map,marker11);
+         });
+         google.maps.event.addListener(marker12, 'click', function() {
+            windows[11].open(map,marker12);
+         });
+         directionsDisplay.setMap(map);
+      }, 2000);
+   }
+  </script>
+</dom-module>

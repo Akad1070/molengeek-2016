@@ -95,8 +95,8 @@ function App(origin,dest){
         })
     };
     
-    this.getDirectionsFromOriginToDest = function(){
-        launchAjaxRequest()
+    this.calculate = function(){
+        
     };
     
     
