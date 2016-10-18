@@ -53,14 +53,14 @@
       
       <google-map map="{{map}}"  latitude="50.835712" longitude="4.289018" on-zoom-changed="setPointSize" on-google-map-ready="setPointSize"
             styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'>
-        <google-map-marker latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante" icon="../images/warning-symbol.png" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Largeur du trottoir insuffisante</google-map-marker>
+        <google-map-marker latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante">Largeur du trottoir insuffisante</google-map-marker>
         <google-map-marker latitude="50.855632" longitude="4.342368" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
         <google-map-marker latitude="50.835712" longitude="4.289018" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
     </google-map>
     <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
     </point-overlay>
     <iron-ajax auto handle-as="json"
-     url="./fontaines-deau-potable.json"
+     url="./data.json"
     last-response="{{data}}">
   </iron-ajax>
 
@@ -110,19 +110,21 @@
   </template>
   
     <script>
-    //   var domi = document.querySelector('#domi');
-    // domi.setPointSize = function(e) {
-    //   console.log(domi);
-    //   this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-    //   this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-    //     console.debug(this.document);
-    //   };
+    
+      
+       var domi = document.querySelector('#domi');
+     domi.setPointSize = function(e) {
+      console.log(this.map);
+      this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
+      this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
+    
+    };
       
       
-    //   var map = document.getElementsByTagName('google-map');
-    //   map.addEventListener('google-map-ready', function(e) {
-    //     alert('Map loaded!');
-    //   });
+       var map = document.getElementsByTagName('google-map');
+       map.addEventListener('google-map-ready', function(e) {
+         alert('Map loaded!');
+       });
       
       
       /*
