@@ -53,9 +53,9 @@
       
       <google-map map="{{map}}"  latitude="50.835712" longitude="4.289018" on-zoom-changed="setPointSize" on-google-map-ready="setPointSize"
             styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'>
-        <!--<google-map-marker animation="BOUNCE" latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante" icon="../images/warning-symbol.png" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Largeur du trottoir insuffisante</google-map-marker>-->
-        <!--<google-map-marker animation="BOUNCE" latitude="50.855632" longitude="4.342368" title="Obstacle à la chaîne de déplacement" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Obstacle à la chaîne de déplacement</google-map-marker>-->
-        <!--<google-map-marker animation="BOUNCE" latitude="50.835712" longitude="4.289018" title="Obstacle à la chaîne de déplacement" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Obstacle à la chaîne de déplacement</google-map-marker>-->
+        <google-map-marker latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante" icon="../images/warning-symbol.png" on-google-map-marker-close="{{markerUnClicked}}" on-google-map-marker-click="{{markerClicked}}" clickEvent=true>Largeur du trottoir insuffisante</google-map-marker>
+        <google-map-marker latitude="50.855632" longitude="4.342368" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
+        <google-map-marker latitude="50.835712" longitude="4.289018" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
     </google-map>
     <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
     </point-overlay>
@@ -63,12 +63,7 @@
      url="./fontaines-deau-potable.json"
     last-response="{{data}}">
   </iron-ajax>
-    <!--
-    <paper-card elevation="2" id="pt-slider">
-      <paper-slider min="10" max="45" value="15" immediate-value="{{uniforms.pointSize}}">
-      </paper-slider>
-    </paper-card>
-    -->  
+
       <google-map-directions map="{{map}}"
         language="fr"
         start-address="{{addressOrigin}}"
@@ -88,7 +83,7 @@
           <paper-input label="Destination" value="{{addresDest}}"></paper-input>
         </paper-icon-item>
 
-      <paper-tabs selected="{{travelMode}}" attr-for-selected="label">
+        <paper-tabs selected="{{travelMode}}" attr-for-selected="label">
         <paper-tab label="DRIVING">
           <iron-icon icon="maps:directions-car"></iron-icon>
           <span>VOITURE</span>
@@ -109,18 +104,25 @@
           <span>TRANSPORT</span>
         </paper-tab>
       </paper-tabs>
+      </paper-card>
       
 
   </template>
   
     <script>
-      var domi = document.querySelector('#domi');
-    domi.setPointSize = function(e) {
-      console.log(domi);
-      this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-      this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-        console.debug(this.document);
-      };
+    //   var domi = document.querySelector('#domi');
+    // domi.setPointSize = function(e) {
+    //   console.log(domi);
+    //   this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
+    //   this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
+    //     console.debug(this.document);
+    //   };
+      
+      
+    //   var map = document.getElementsByTagName('google-map');
+    //   map.addEventListener('google-map-ready', function(e) {
+    //     alert('Map loaded!');
+    //   });
       
       
       /*
