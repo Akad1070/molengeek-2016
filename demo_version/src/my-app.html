@@ -26,7 +26,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/google-map/google-map.html">
 <link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/google-map/google-map-directions.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="./my-icons.html">
 
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
@@ -206,13 +206,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      }
     });
 
+    /*
     var transportMode = 0;
     var transportModes = ["Wheelchair", "Public Transports"];
     var transportModeColors = ["#ddf","#dfd"];
     var transportModeIcons = ["accessible","directions-subway"];
     var obstacles_toAvoid = [];
     var template = document.querySelector('template');
-
+    */
 
     var map;
 
@@ -229,149 +230,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          directionsDisplay = new google.maps.DirectionsRenderer();
          directionsService = new google.maps.DirectionsService();
          map = new google.maps.Map(fuckThisMap, {
-         center: {lat: 50.853656, lng: 4.347112},
-         zoom: 17
+             center: {lat: 50.853656, lng: 4.347112},
+             zoom: 17
+             
          });
 
          var marker0 = new google.maps.Marker({
-            position: new google.maps.LatLng(50.850092, 4.352189),
-            title:"Pas d'accès par ascenseur à la station de métro",
-         	icon: "../images/warning-symbol.png",
-         	value: "Pas d'accès par ascenseur à la station de métro"
+              position: new google.maps.LatLng(50.850092, 4.352189),
+              title   :"Pas d'accès par ascenseur à la station de métro",
+              icon    : "./images/warning-symbol.png",
+              value   : "Pas d'accès par ascenseur à la station de métro"
          });
 
-         var marker1 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.836387, 4.314902),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
+         var marker1= new google.maps.Marker({
+             position   : new google.maps.LatLng(50.836387, 4.314902),
+             title      :"Obstacle à la chaîne de déplacement",
+             icon       : "./images/warning-symbol.png",
+             value      : "Obstacle à la chaîne de déplacement"
          });
 
          var marker2 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.836387, 4.313466),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
+              position: new google.maps.LatLng(50.836387, 4.313466),
+              title   :"Obstacle à la chaîne de déplacement",
+              icon    : "./images/warning-symbol.png",
+              value   : "Obstacle à la chaîne de déplacement"
          });
 
          var marker3 = new google.maps.Marker({
            position: new google.maps.LatLng(50.836716, 4.313386),
            title:"Longueur de la pente supérieure à 12 %",
-          icon: "../images/warning-symbol.png",
+          icon: "./images/warning-symbol.png",
           value: "Longueur de la pente supérieure à 12 %"
          });
 
-         var marker4 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.836670, 4.328279),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
-         });
 
-         var marker5 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.827000431344, 4.26621290480807),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
-         });
-
-         var marker6 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.8271572824181, 4.26635045573425),
-           title:"Pas d'inflexion de trottoir pour la traversée piétonne",
-          icon: "../images/warning-symbol.png",
-          value: "Pas d'inflexion de trottoir pour la traversée piétonne"
-         });
-
-         var marker7 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.8175194307652, 4.28388682566695),
-           title:"Largeur du trottoir insuffisante",
-          icon: "../images/warning-symbol.png",
-          value: "Largeur du trottoir insuffisante"
-         });
-
-         var marker8 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.8222967037932, 4.2958956344048),
-           title:"Largeur du trottoir insuffisante",
-          icon: "../images/warning-symbol.png",
-          value: "Largeur du trottoir insuffisante"
-         });
-
-         var marker9 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.834632, 4.321168),
-           title:"Largeur du trottoir insuffisante",
-          icon: "../images/warning-symbol.png",
-          value: "Largeur du trottoir insuffisante"
-         });
-
-         var marker10 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.844632, 4.326168),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
-         });
-
-         var marker11 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.835712, 4.289018),
-           title:"Obstacle à la chaîne de déplacement",
-          icon: "../images/warning-symbol.png",
-          value: "Obstacle à la chaîne de déplacement"
-         });
-
-         var marker12 = new google.maps.Marker({
-           position: new google.maps.LatLng(50.851076, 4.350152),
-           title:"Largeur du trottoir insuffisante",
-          icon: "../images/warning-symbol.png",
-          value: "Largeur du trottoir insuffisante"
-         });
-         var markersList = [marker1, marker2, marker3,marker4, marker5, marker6,marker7, marker8, marker9,marker10, marker11, marker12, marker0];
-         var windows = [];
+         var markersList = [marker1, marker2, marker3, marker0];
          for (var i = 0; i < markersList.length; i++) {
             var marker = markersList[i];
             marker.setMap(map);
             var infowindow = new google.maps.InfoWindow({
                content: marker.title
             });
-            windows.push(infowindow);
+            
+             google.maps.event.addListener(marker, "click", function() {
+                infowindow.open(map,marker);
+             });
          }
-         google.maps.event.addListener(marker0, "click", function() {
-            windows[12].open(map,marker0);
-         });
-         google.maps.event.addListener(marker1, 'click', function() {
-            windows[0].open(map,marker1);
-         });
-         google.maps.event.addListener(marker2, 'click', function() {
-            windows[1].open(map,marker2);
-         });
-         google.maps.event.addListener(marker3, 'click', function() {
-            windows[2].open(map,marker3);
-         });
-         google.maps.event.addListener(marker4, 'click', function() {
-            windows[3].open(map,marker4);
-         });
-         google.maps.event.addListener(marker5, 'click', function() {
-            windows[4].open(map,marker5);
-         });
-         google.maps.event.addListener(marker6, 'click', function() {
-            windows[5].open(map,marker6);
-         });
-         google.maps.event.addListener(marker7, 'click', function() {
-            windows[6].open(map,marker7);
-         });
-         google.maps.event.addListener(marker8, 'click', function() {
-            windows[7].open(map,marker8);
-         });
-         google.maps.event.addListener(marker9, 'click', function() {
-            windows[8].open(map,marker9);
-         });
-         google.maps.event.addListener(marker10, 'click', function() {
-            windows[9].open(map,marker10);
-         });
-         google.maps.event.addListener(marker11, 'click', function() {
-            windows[10].open(map,marker11);
-         });
-         google.maps.event.addListener(marker12, 'click', function() {
-            windows[11].open(map,marker12);
-         });
          directionsDisplay.setMap(map);
       }, 2000);
    }

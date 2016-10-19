@@ -15,7 +15,6 @@
     <link rel="import" href="bower_components/iron-icons/maps-icons.html">
     <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
     
-    <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
     <link rel="import" href="bower_components/point-overlay/point-overlay.html">
     <link rel="import" href="bower_components/paper-slider/paper-slider.html">
     <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
@@ -43,7 +42,7 @@
     </style>
   
   </head>
-  <body>
+  <body unresolved>
     <ion-header-bar class="bar-dark" >
       <h1 class="title">HandiPanda</h1>
     </ion-header-bar>
@@ -51,59 +50,78 @@
     <template is="dom-bind" id="domi">
       
       
-      <google-map map="{{map}}"  latitude="50.835712" longitude="4.289018" on-zoom-changed="setPointSize" on-google-map-ready="setPointSize"
-            styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'>
-        <google-map-marker latitude="50.834632" longitude="4.321168" title="Largeur du trottoir insuffisante">Largeur du trottoir insuffisante</google-map-marker>
-        <google-map-marker latitude="50.855632" longitude="4.342368" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
-        <google-map-marker latitude="50.835712" longitude="4.289018" title="Obstacle à la chaîne de déplacement">Obstacle à la chaîne de déplacement</google-map-marker>
+      <google-map map="{{map}}"
+          api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
+          latitude="50.835712" longitude="4.289018"
+          on-zoom-changed="setPointSize" 
+          on-google-map-ready="setPointSize"
+          styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'
+      >
+        <google-map-marker 
+            latitude="50.834632" longitude="4.321168" 
+            title="Largeur du trottoir insuffisante">
+              Largeur du trottoir insuffisante
+        </google-map-marker>
+        <google-map-marker 
+            latitude="50.855632" longitude="4.342368" 
+            title="Obstacle à la chaîne de déplacement">
+              Obstacle à la chaîne de déplacement
+        </google-map-marker>
+        <google-map-marker 
+            latitude="50.835712" longitude="4.289018" 
+            title="Obstacle à la chaîne de déplacement">
+              Obstacle à la chaîne de déplacement
+        </google-map-marker>
     </google-map>
+    
     <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
     </point-overlay>
+    
     <iron-ajax auto handle-as="json"
-     url="./data.json"
-    last-response="{{data}}">
-  </iron-ajax>
+      url="./data.json"
+      last-response="{{data}}">
+    </iron-ajax>
 
-      <google-map-directions map="{{map}}"
-        language="fr"
-        start-address="{{addressOrigin}}"
-        end-address="{{addresDest}}"
-        travel-mode="[[travelMode]]"
-        ></google-map-directions>
-        
-      </google-map-directions>
       
       <paper-card elevation="1"> <!-- elevation controls the amount of box shadow -->
         <paper-icon-item>
           <iron-icon icon="search" item-icon></iron-icon>
-          <paper-input label="Depart" value="{{addressOrigin}}"></paper-input>
+          <paper-input label="Depart" value="{{addressOrigin}}"
+            required auto-validate error-message="Besoin d'une adresse de depart"
+          >
+            
+          </paper-input>
         </paper-icon-item>
         <paper-icon-item>
           <iron-icon icon="search" item-icon></iron-icon>
-          <paper-input label="Destination" value="{{addresDest}}"></paper-input>
+          <paper-input label="Destination" value="{{addresDest}}"
+              required auto-validate error-message="Besoin d'une adresse de destination"
+          >
+            
+          </paper-input>
         </paper-icon-item>
 
         <paper-tabs selected="{{travelMode}}" attr-for-selected="label">
-        <paper-tab label="DRIVING">
-          <iron-icon icon="maps:directions-car"></iron-icon>
-          <span>VOITURE</span>
-        </paper-tab>
-        
-        <paper-tab label="WALKING">
-          <iron-icon icon="maps:icons:accessible"></iron-icon>
-          <span>EN CHAISE</span>
-        </paper-tab>
-        
-        <paper-tab label="WALKING">
-          <iron-icon icon="icons:accessibility"></iron-icon>
-          <span>A PIED</span>
-        </paper-tab>
-        
-        <paper-tab  label="TRANSIT">
-          <iron-icon icon="maps:directions-transit"></iron-icon>
-          <span>TRANSPORT</span>
-        </paper-tab>
-      </paper-tabs>
+          <paper-tab label="DRIVING">
+            <iron-icon icon="maps:directions-car"></iron-icon>
+            <span>VOITURE</span>
+          </paper-tab>
+          
+          <paper-tab label="WALKING">
+            <iron-icon icon="maps:icons:accessible"></iron-icon>
+            <span>EN CHAISE</span>
+          </paper-tab>
+          
+          <paper-tab label="WALKING">
+            <iron-icon icon="icons:accessibility"></iron-icon>
+            <span>A PIED</span>
+          </paper-tab>
+          
+          <paper-tab  label="TRANSIT">
+            <iron-icon icon="maps:directions-transit"></iron-icon>
+            <span>TRANSPORT</span>
+          </paper-tab>
+        </paper-tabs>
       </paper-card>
       
 
@@ -112,13 +130,13 @@
     <script>
     
       
-       var domi = document.querySelector('#domi');
-     domi.setPointSize = function(e) {
-      console.log(this.map);
-      this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-      this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-    
-    };
+      var domi = document.querySelector('#domi');
+      domi.setPointSize = function(e) {
+        console.log(this.map);
+        this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
+        this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
+      
+      };
       
       
        var map = document.getElementsByTagName('google-map');
