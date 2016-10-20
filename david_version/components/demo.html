@@ -8,13 +8,16 @@
       window.Polymer.dom = 'shadow';
       */
     </script>
+    <link rel="import" href="./my-app-input.html">
     <link rel="import" href="./options-pmr.html">
   </head>
   <body>
     <template is="dom-bind" id="demo">
       
-    <options-pmr timeDeparture="{{val}}"></options-pmr>
-    <input type="text" name="tset" value="{{val}}" />
+        <my-app-input></my-app-input>
+        <options-pmr></options-pmr>
+      
+    
     </template>
   </body>
 </html>

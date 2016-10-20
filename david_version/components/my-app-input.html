@@ -1,0 +1,125 @@
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
+
+<link rel="import" href="./icons-custom.html">
+
+
+<dom-module id="my-app-input">
+    <template>
+
+        <paper-input 
+                label="Adresse de Depart" 
+                value="{{addressOrigin}}"
+                required auto-validate error-message="Besoin d'une adresse de depart"
+        >
+            <paper-icon-button prefix icon="maps:my-location"
+                title='Localise-moi'
+            >
+                
+            </paper-icon-button>
+            <paper-icon-button suffix 
+                    on-tap="[[clearInputOrigin]]" 
+                    icon="clear" alt="clear" title="clear"
+            >
+            </paper-icon-button>
+        </paper-input>    
+        
+        <paper-input  id="addressDest" 
+                label="Adresse de Destination" 
+                value="{{addressDest}}"
+                required auto-validate error-message="Besoin d'une adresse de destination"
+        >
+            <paper-icon-button prefix icon="maps:my-location"
+                title='Localise-moi'
+            >
+                
+            </paper-icon-button>
+            <paper-icon-button suffix 
+                    on-tap="[[clearInputDest]]"
+                    icon="clear" alt="clear" title="clear"
+            >
+            </paper-icon-button>
+        </paper-input>
+    
+    
+    </template>
+    
+    
+    <script>
+         function clearInput(em,an) {
+             console.log(this)
+          document.getElementById('inputWithButton').value = '';
+        }
+        Polymer({
+            is: "my-app-input",
+            properties : {
+                 addressOrigin: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute : true
+                },
+                addressDest : {
+                    type : String,
+                    notify: true,
+                    reflectToAttribute : true
+                },
+                
+            },
+             // Called when this component is fully rendered
+            ready : function(app){
+                this._getCurrentLocation();
+            },
+            
+            _CURRENT_LOCATION   : null,
+            _errMsg             : null,
+            
+            clearInputOrigin : function (){
+                console.info(this.addressOrigin)
+                this.addressOrigin = '';
+            },
+            
+            clearInputDest : function (){
+                this.addressDest = '';
+            },
+            
+            _getCurrentLocation : function(){
+                if (window.navigator.geolocation) {
+                    window.navigator.geolocation.getCurrentPosition(function(pos){
+                        this._CURRENT_LOCATION = pos.coords.latitude + "," + pos.coords.longitude;    
+                        console.info(this._CURRENT_LOCATION);
+                    }, this._onGetLocationError);
+                } else {
+                    this._errMsg = "La Geolocation n'est pas supporte par votre navigateur.";
+                }
+            },
+
+            
+            _onGetLocationError : function(err){
+                switch(err.code) {
+                    case err.PERMISSION_DENIED:
+                        this._errMsg = "Vous avez refuse la requete pour la Geolocation.";
+                    break;
+                    case err.POSITION_UNAVAILABLE:
+                        this._errMsg = "La Geolocation est indisponible.";
+                    break;
+                    case err.TIMEOUT:
+                        this._errMsg = "La requete de Geolocation a expiree.";
+                    break;
+                    case err.UNKNOWN_ERROR:
+                        this._errMsg = "Une erreur bizarre est survenue.";
+                    break;
+                }
+                console.error(this._errMsg);
+            }
+            
+        });
+    </script>
+
+
+
+</dom-module>
+
+

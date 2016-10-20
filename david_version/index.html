@@ -49,7 +49,7 @@
     
     <template is="dom-bind" id="domi">
       
-      
+       
       <google-map map="{{map}}"
           api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
           latitude="50.835712" longitude="4.289018"
@@ -82,6 +82,16 @@
       last-response="{{data}}">
     </iron-ajax>
 
+      <google-map-directions 
+        api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
+        map="{{map}}"
+        language="fr"
+        start-address="{{addressOrigin}}"
+        end-address="{{addresDest}}"
+        travel-mode="[[travelMode]]"
+        >
+        
+      </google-map-directions>
       
       <paper-card elevation="1"> <!-- elevation controls the amount of box shadow -->
         <paper-icon-item>
@@ -129,20 +139,20 @@
   
     <script>
     
-      
-      var domi = document.querySelector('#domi');
-      domi.setPointSize = function(e) {
-        console.log(this.map);
-        this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-        this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-      
-      };
+        var setSize =  function(e) {
+            this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
+            this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
+          };
       
       
        var map = document.getElementsByTagName('google-map');
        map.addEventListener('google-map-ready', function(e) {
-         alert('Map loaded!');
+          var domi = document.querySelector('#domi');
+          domi.setPointSize = setSize;
+          alert('Map loaded!');
        });
+       
+       
       
       
       /*

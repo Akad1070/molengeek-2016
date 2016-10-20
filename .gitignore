@@ -16,4 +16,5 @@ pids
 build/Release
 
 # Dependency directories
-bower_components
+david_version/bower_components
+demo_version/bower_components
