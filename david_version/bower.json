@@ -1,8 +1,8 @@
 {
-  "name": "polymer-experiment",
+  "name": "HandiPanda",
   "version": "0.0.0",
   "authors": [
-    "dirkjohnson <dirkorinson@gmail.com>"
+    
   ],
   "license": "MIT",
   "private": true,
@@ -12,7 +12,9 @@
     "google-map": "GoogleWebComponents/google-map#^1.1.3",
     "iron-elements": "PolymerElements/iron-elements#^1.0.0",
     "paper-elements": "PolymerElements/paper-elements#^1.0.1",
-    "point-overlay": "googlecodelabs/polymer-webgl-visualization"
+    "point-overlay": "googlecodelabs/polymer-webgl-visualization",
+    "paper-toast": "PolymerElements/paper-toast#^1.3.0",
+    "paper-tooltip": "PolymerElements/paper-tooltip#^1.1.3"
   },
   "resolutions": {
     "webcomponentsjs": "0.7.22",
