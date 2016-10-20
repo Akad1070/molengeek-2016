@@ -1,0 +1,80 @@
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/google-map/google-map-directions.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/point-overlay/point-overlay.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="./icons-custom.html">
+
+
+<dom-module id="pmr-map">
+    <style>
+        google-map{
+            position: static;
+            display: block;
+            height: 100%;
+        }
+    </style>
+    
+    <template>
+        <google-map map="{{map}}"
+            api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
+            latitude="50.835712" longitude="4.289018"
+            on-zoom-changed="setPointSize" 
+            on-google-map-ready="setPointSize"
+            styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'
+        >
+
+        </google-map>
+        
+        <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
+        </point-overlay>
+    
+        <iron-ajax auto handle-as="json"
+        url="../data.json"
+        last-response="{{data}}">
+        </iron-ajax>
+
+
+    
+    
+    </template>
+    
+    
+    <script>
+        Polymer({
+            is: "pmr-map",
+            properties : {
+                maps : {
+                    key : {
+                        type : String,
+                        value : 'AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
+                    }
+                }
+
+            },
+            
+            
+            
+            
+            
+            
+            setPointSize : function(){
+                /*
+                this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
+                this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
+                */
+            }
+
+            
+            
+        });
+    </script>
+
+
+
+</dom-module>
+
+

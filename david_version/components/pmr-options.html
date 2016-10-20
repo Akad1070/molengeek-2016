@@ -7,15 +7,15 @@
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
 
-<link rel="import" href="./icons-custom.html">
 
 
-<dom-module id="options-pmr">
+<dom-module id="pmr-options">
     <template>
         <style>
             paper-tabs {
                 --paper-tabs-selection-bar-color: #0D47A1;
-                margin: 5px;
+                margin: 12px 5px 8px 5px;
+                padding: 5px;
             }
             paper-tab {
                 --paper-tab-ink: #BBDEFB;
@@ -31,7 +31,6 @@
         </style>
         
         
-        <paper-card elevation="5">
             <!--Choice for type of PMR-->
             <paper-tabs id='typePmr' selected="{{typePmr}}" attr-for-selected="label" label='Test'>
                 <span>PMR &nbsp;</span>
@@ -75,14 +74,13 @@
             </paper-icon-item>
         
 
-        </paper-card>
         
     </template>
     
     
     <script>
         Polymer({
-            is: "options-pmr",
+            is: "pmr-options",
             properties : {
                  typePmr: {
                     type: String,
@@ -139,7 +137,6 @@
             },
             
             _timeDepartureChanged : function(nTime){
-                console.log(nTime);
                 this.timeDeparture = nTime || this._DEFAULT_TIME;
             }
         });

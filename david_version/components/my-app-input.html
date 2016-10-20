@@ -15,13 +15,15 @@
                 value="{{addressOrigin}}"
                 required auto-validate error-message="Besoin d'une adresse de depart"
         >
-            <paper-icon-button prefix icon="maps:my-location"
+            <paper-icon-button prefix 
+                icon="maps:my-location"
                 title='Localise-moi'
+                on-tap="getCurrentLocationForOrigin"
             >
                 
             </paper-icon-button>
-            <paper-icon-button suffix 
-                    on-tap="[[clearInputOrigin]]" 
+            <paper-icon-button suffix id="btnClearOrigin"
+                    on-tap="clearInputOrigin" 
                     icon="clear" alt="clear" title="clear"
             >
             </paper-icon-button>
@@ -34,12 +36,14 @@
         >
             <paper-icon-button prefix icon="maps:my-location"
                 title='Localise-moi'
+                on-tap="getCurrentLocationForDest"
             >
                 
             </paper-icon-button>
             <paper-icon-button suffix 
-                    on-tap="[[clearInputDest]]"
-                    icon="clear" alt="clear" title="clear"
+                id="btnClearDest"    
+                on-tap="clearInputDest"
+                icon="clear" alt="clear" title="clear"
             >
             </paper-icon-button>
         </paper-input>
@@ -49,35 +53,29 @@
     
     
     <script>
-         function clearInput(em,an) {
-             console.log(this)
-          document.getElementById('inputWithButton').value = '';
-        }
         Polymer({
             is: "my-app-input",
             properties : {
                  addressOrigin: {
                     type: String,
                     notify: true,
-                    reflectToAttribute : true
+                    reflectToAttribute : true,
+                    observer : '_onAddressOriginChanged'
                 },
                 addressDest : {
                     type : String,
                     notify: true,
-                    reflectToAttribute : true
-                },
+                    reflectToAttribute : true,
+                    observer : '_onAddressDestChanged'
+                }
                 
             },
-             // Called when this component is fully rendered
-            ready : function(app){
-                this._getCurrentLocation();
-            },
-            
+
             _CURRENT_LOCATION   : null,
             _errMsg             : null,
             
             clearInputOrigin : function (){
-                console.info(this.addressOrigin)
+                console.info(this.addressOrigin);
                 this.addressOrigin = '';
             },
             
@@ -85,18 +83,49 @@
                 this.addressDest = '';
             },
             
-            _getCurrentLocation : function(){
+            
+            getCurrentLocationForOrigin : function(){
+                var that = this;
+                 this._getCurrentLocation(function(pos){
+                     that.addressOrigin = pos;
+                 });
+            },
+            
+            getCurrentLocationForDest : function(){
+                var that = this;
+                 this._getCurrentLocation(function(pos){
+                     that.addressDest = pos;
+                 });
+            },
+            
+            
+            _onAddressOriginChanged : function (nOrigin){
+                // Hide the clear button on empty input
+                this.$.btnClearOrigin.hidden = (!nOrigin);
+                this.addressOrigin = nOrigin;    
+            },
+            _onAddressDestChanged : function (nDest){
+                // Hide the clear button on empty input
+                this.$.btnClearDest.hidden = (!nDest); 
+                this.addressDest = nDest;    
+            },
+            
+            _getCurrentLocation : function(cb){
+                var that = this;
                 if (window.navigator.geolocation) {
+                    // Got already his current location ?
+                    if(that._CURRENT_LOCATION !== null)
+                        return cb(that._CURRENT_LOCATION);;
+                    // Otherwise, go fetch his location
                     window.navigator.geolocation.getCurrentPosition(function(pos){
-                        this._CURRENT_LOCATION = pos.coords.latitude + "," + pos.coords.longitude;    
-                        console.info(this._CURRENT_LOCATION);
-                    }, this._onGetLocationError);
+                        that._CURRENT_LOCATION = pos.coords.latitude + "," + pos.coords.longitude;    
+                        return cb(that._CURRENT_LOCATION);
+                    }, that._onGetLocationError);
                 } else {
-                    this._errMsg = "La Geolocation n'est pas supporte par votre navigateur.";
+                    that._errMsg = "La Geolocation n'est pas supporte par votre navigateur.";
                 }
             },
 
-            
             _onGetLocationError : function(err){
                 switch(err.code) {
                     case err.PERMISSION_DENIED:

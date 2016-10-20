@@ -1,23 +1,49 @@
-<!doctype html>
+<!DOCTYPE HTML>
 <html>
-  <head>
-    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-    <script>
-      /*
-      window.Polymer = window.Polymer || {};
-      window.Polymer.dom = 'shadow';
-      */
-    </script>
-    <link rel="import" href="./my-app-input.html">
-    <link rel="import" href="./options-pmr.html">
-  </head>
-  <body>
-    <template is="dom-bind" id="demo">
-      
-        <my-app-input></my-app-input>
-        <options-pmr></options-pmr>
-      
-    
-    </template>
-  </body>
+    <head>
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+
+        <link rel="import" href="./my-app-input.html">
+        <link rel="import" href="./pmr-options.html">
+        <link rel="import" href="./pmr-map.html">
+    </head>
+    <body>
+        <template is="dom-bind" id="demo">
+            <style>
+                body {
+                    font-family: 'Roboto', Arial, sans-serif;
+                    height: 100%;
+                    color: #333;
+                    margin: 0;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    -webkit-tap-highlight-color: rgba(0,0,0,0);
+                    -webkit-touch-callout: none;
+                }
+                paper-card {
+                    position: absolute;
+                    left: 25px;
+                    width: 25%;
+                    z-index: 1;
+                    margin-top: 50px;
+                }
+            </style>
+        
+        
+            <paper-card elevation="5">
+                <my-app-input address-origin={{addressOrigin}} address-dest={{addresDest}}></my-app-input>
+                <pmr-options type-travel=[[travelMode]]></pmr-options>
+            </paper-card>
+            
+            <pmr-map origin={{addressOrigin}} destination={{addresDest}}>
+                
+            </pmr-map>
+            
+            
+            <h1>From [[addressOrigin]] to [[addresDest]] </h1>
+        
+        </template>
+    </body>
 </html>
