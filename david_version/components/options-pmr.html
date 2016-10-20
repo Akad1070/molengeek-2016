@@ -85,17 +85,25 @@
                  typePmr: {
                     type: String,
                     observer : '_pmrChanged',
-                    notify: true
+                    notify: true,
+                    reflectToAttribute : true
                 },
                 typeTravel : {
                     type : String,
                     observer : '_travelChanged',
-                    notify: true
+                    notify: true,
+                    reflectToAttribute : true
                 },
                 timeDeparture : {
                     type : String,
                     observer : '_timeDepartureChanged',
-                    notify: true
+                    notify: true,
+                    reflectToAttribute : true,
+                    value : function (){
+                        _DEFAULT_TIME = new Date().toLocaleTimeString('fr-BE', { hour: "numeric", minute: "numeric"});
+                        return _DEFAULT_TIME ;
+                        
+                    }
                 }
                 
             },
@@ -103,7 +111,6 @@
             ready : function(app){
                 this.btnTravelByDriving = this.$.travel_driving;
                 this.optionsSupp = this.$.options_supp;
-                this.timeDeparture = new Date().toLocaleTimeString('fr-BE', { hour: "numeric", minute: "numeric"});
             },
             
             _DEFAULT_PMR    : 'CHAIR',
@@ -114,18 +121,24 @@
     
             // Called when the type of PMR changed
             _pmrChanged : function (pmr){
-                this.$.typeTravel.hidden = false;
+                // Show the type of travel available for this PMR
+                this.$.typeTravel.hidden = false; 
+                // Hide the travel bx car for Blinded person
                 this.btnTravelByDriving.hidden = (pmr === this._PMR_BLIND);
                 this.btnTravelByDriving.disabled = (pmr === this._PMR_BLIND);
+                this.typePmr = pmr || this._DEFAULT_PMR;
             },
                 
             // Called when the type of travel changed
             _travelChanged : function(travel){
-                this.optionsSupp.hidden = !(travel === this._TRAVEL_TRANSIT);
+                // Hide the options when the options isn't TRANSIT
+                this.optionsSupp.hidden = (travel !== this._TRAVEL_TRANSIT);
+                this.typeTravel = travel || this._DEFAULT_TRAVEL;
             },
             
             _timeDepartureChanged : function(nTime){
-                console.log();
+                console.log(nTime);
+                this.timeDeparture = nTime || this._DEFAULT_TIME;
             }
         });
     </script>
