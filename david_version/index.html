@@ -1,182 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- 2. Use an HTML Import to bring in the element. -->
-    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="bower_components/google-map/google-map.html">
-    <link rel="import" href="bower_components/google-map/google-map-directions.html">
+    <head>
+        <!-- 2. Use an HTML Import to bring in the element. -->
+        <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     
-    <link rel="import" href="bower_components/iron-icon/iron-icon.html">
-    <link rel="import" href="bower_components/iron-icons/iron-icons.html">
-    <link rel="import" href="bower_components/paper-item/paper-item.html">
-    <link rel="import" href="bower_components/paper-item/paper-icon-item.html">
-    <link rel="import" href="bower_components/paper-input/paper-input.html">
-    <link rel="import" href="bower_components/paper-card/paper-card.html">
-    <link rel="import" href="bower_components/iron-icons/maps-icons.html">
-    <link rel="import" href="bower_components/paper-tabs/paper-tabs.html">
-    
-    <link rel="import" href="bower_components/point-overlay/point-overlay.html">
-    <link rel="import" href="bower_components/paper-slider/paper-slider.html">
-    <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
-    
-    <link rel="stylesheet" href="style.css">
-    <style is="custom-style">
-      paper-tabs {
-        --paper-tabs-selection-bar-color: #0D47A1;
-        margin-top: 16px;
-      }
-      paper-tab {
-        --paper-tab-ink: #BBDEFB;
-      }
-  
-      /* Other styles that make things more pleasant.
-         These could instead be added in styles.css since they
-         do not use any Polymer styling features. */
-      paper-tab iron-icon {
-        margin-right: 10px;
-      }
-      paper-tab.iron-selected {
-        background: rgb(66, 133, 244);
-        color: white;
-      }
-    </style>
-  
-  </head>
-  <body unresolved>
-    <ion-header-bar class="bar-dark" >
-      <h1 class="title">HandiPanda</h1>
-    </ion-header-bar>
-    
-    <template is="dom-bind" id="domi">
-      
-       
-      <google-map map="{{map}}"
-          api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
-          latitude="50.835712" longitude="4.289018"
-          on-zoom-changed="setPointSize" 
-          on-google-map-ready="setPointSize"
-          styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'
-      >
-        <google-map-marker 
-            latitude="50.834632" longitude="4.321168" 
-            title="Largeur du trottoir insuffisante">
-              Largeur du trottoir insuffisante
-        </google-map-marker>
-        <google-map-marker 
-            latitude="50.855632" longitude="4.342368" 
-            title="Obstacle à la chaîne de déplacement">
-              Obstacle à la chaîne de déplacement
-        </google-map-marker>
-        <google-map-marker 
-            latitude="50.835712" longitude="4.289018" 
-            title="Obstacle à la chaîne de déplacement">
-              Obstacle à la chaîne de déplacement
-        </google-map-marker>
-    </google-map>
-    
-    <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
-    </point-overlay>
-    
-    <iron-ajax auto handle-as="json"
-      url="./data.json"
-      last-response="{{data}}">
-    </iron-ajax>
-
-      <google-map-directions 
-        api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
-        map="{{map}}"
-        language="fr"
-        start-address="{{addressOrigin}}"
-        end-address="{{addresDest}}"
-        travel-mode="[[travelMode]]"
-        >
+        <link rel="import" href="./components/my-pmr-app.html">
         
-      </google-map-directions>
-      
-      <paper-card elevation="1"> <!-- elevation controls the amount of box shadow -->
-        <paper-icon-item>
-          <iron-icon icon="search" item-icon></iron-icon>
-          <paper-input label="Depart" value="{{addressOrigin}}"
-            required auto-validate error-message="Besoin d'une adresse de depart"
-          >
-            
-          </paper-input>
-        </paper-icon-item>
-        <paper-icon-item>
-          <iron-icon icon="search" item-icon></iron-icon>
-          <paper-input label="Destination" value="{{addresDest}}"
-              required auto-validate error-message="Besoin d'une adresse de destination"
-          >
-            
-          </paper-input>
-        </paper-icon-item>
+        <link rel="stylesheet" href="style.css">
 
-        <paper-tabs selected="{{travelMode}}" attr-for-selected="label">
-          <paper-tab label="DRIVING">
-            <iron-icon icon="maps:directions-car"></iron-icon>
-            <span>VOITURE</span>
-          </paper-tab>
-          
-          <paper-tab label="WALKING">
-            <iron-icon icon="maps:icons:accessible"></iron-icon>
-            <span>EN CHAISE</span>
-          </paper-tab>
-          
-          <paper-tab label="WALKING">
-            <iron-icon icon="icons:accessibility"></iron-icon>
-            <span>A PIED</span>
-          </paper-tab>
-          
-          <paper-tab  label="TRANSIT">
-            <iron-icon icon="maps:directions-transit"></iron-icon>
-            <span>TRANSPORT</span>
-          </paper-tab>
-        </paper-tabs>
-      </paper-card>
-      
-
-  </template>
-  
-    <script>
-    
-        var setSize =  function(e) {
-            this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-            this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-          };
-      
-      
-       var map = document.getElementsByTagName('google-map');
-       map.addEventListener('google-map-ready', function(e) {
-          var domi = document.querySelector('#domi');
-          domi.setPointSize = setSize;
-          alert('Map loaded!');
-       });
-       
-       
-      
-      
-      /*
-      gMap.addEventListener('api-load', function(e) {
-        //document.querySelector('google-map-directions').map = this.map;
-      });
-      gMap.addEventListener('api-load', function(e) {
-        this.document.querySelector('google-map-directions').map = this.map;
-      });
-      function toggleControls() {
-        gMap.disableDefaultUi = !gMap.disableDefaultUi;
-      }
-      var marker = this.document.querySelector('google-map-marker');
-      var poly = this.document.querySelector('google-map-poly');
-      var point = this.document.querySelector('google-map-point');
-      marker.addEventListener('google-map-marker-dragend', function(e) {
-        var latLng = e.detail.latLng;
-        console.debug(e);
-        console.log('pin dropped', latLng.lat(), latLng.lng());
-        point.latitude = latLng.lat();
-        point.longitude = latLng.lng();
-        poly._buildPathFromPoints();
-      });
-      */
-</script>
-  </body>
+    </head>
+    <body unresolved>
+        <ion-header-bar class="bar-dark" >
+            <h1 class="title">HandiPanda</h1>
+        </ion-header-bar>
+        
+        <template is="dom-bind" id="domi">
+            <my-pmr-app>
+                
+            </my-pmr-app>
+            
+        </template>  
+        <script>
+            
+            /*
+            var marker= this.document.querySelector('google-map-marker');
+            var poly = this.document.querySelector('google-map-poly');
+            var point = this.document.querySelector('google-map-point');
+            marker.addEventListener('google-map-marker-dragend', function(e) {
+                var latLng= e.detail.latLng;
+                console.debug(e);
+                console.log('pin dropped', latLng.lat(), latLng.lng());
+                point.latitude= latLng.lat();
+                point.longitude= latLng.lng();
+                poly._buildPathFromPoints();
+            });
+            */
+        </script>
+    </body>
 </html>

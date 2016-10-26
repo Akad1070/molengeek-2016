@@ -3,10 +3,10 @@
 <link rel="import" href="../bower_components/iron-icon/iron-icon.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="../bower_components/point-overlay/point-overlay.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <link rel="import" href="./icons-custom.html">
+<link rel="import" href="./pmr-map-marker.html">
 
 
 <dom-module id="pmr-map">
@@ -19,57 +19,66 @@
     </style>
     
     <template>
-        <google-map map="{{map}}"
-            api-key='AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
-            latitude="50.835712" longitude="4.289018"
-            on-zoom-changed="setPointSize" 
-            on-google-map-ready="setPointSize"
-            styles='[{"featureType":"water","stylers":[{"lightness":-20}]}]'
+        <google-map id='gmap'
+            map="{{map}}"
+            api-key='[[mapKey]]'
+            disable-default-ui
+            latitude=50.8504500 longitude=4.3487800
+            zoom=12
         >
-
+            <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>
+                <pmr-map-marker  hidden
+                        marker-map="{{map}}" 
+                        marker="[[mapMarker]]"
+                        on-kick="{{tapTap}}"
+                        
+                >
+ 
+                </pmr-map-marker>
+            </template>
+            
         </google-map>
         
-        <point-overlay map="[[map]]" uniforms="{{uniforms}}"  data="{{data}}">
-        </point-overlay>
     
-        <iron-ajax auto handle-as="json"
-        url="../data.json"
-        last-response="{{data}}">
-        </iron-ajax>
 
 
-    
-    
+
+
     </template>
     
     
     <script>
-        Polymer({
-            is: "pmr-map",
-            properties : {
-                maps : {
-                    key : {
+        HTMLImports.whenReady(function(){
+            Polymer({
+                is: "pmr-map",
+                properties : {
+                    map : Object,
+                    mapKey : {
                         type : String,
                         value : 'AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
-                    }
+                    },
+                    travel : String,
+                    mapMarkers : Object
+                
+                },
+                
+    
+                _BXL_COORD : {lat : 50.8504500, lng : 4.3487800 },
+                
+                ready : function(){
+                    
+                },
+                
+                selectObstacle : function(){
+                    console.log('An obstacle has been selected !');
+                },
+                
+                tapTap : function (e){
+                    console.log('Tap tap : ',e);
                 }
 
-            },
-            
-            
-            
-            
-            
-            
-            setPointSize : function(){
-                /*
-                this.uniforms.pointSize = Math.exp(0.3 * this.map.getZoom());
-                this.notifyPath('uniforms.pointSize', this.uniforms.pointSize);
-                */
-            }
-
-            
-            
+                
+            });
         });
     </script>
 

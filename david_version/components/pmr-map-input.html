@@ -7,7 +7,7 @@
 <link rel="import" href="./icons-custom.html">
 
 
-<dom-module id="my-app-input">
+<dom-module id="pmr-map-input">
     <template>
 
         <paper-input 
@@ -54,16 +54,20 @@
     
     <script>
         Polymer({
-            is: "my-app-input",
+            is: "pmr-map-input",
             properties : {
-                 addressOrigin: {
-                    type: String,
+                addressOriginFull: String,
+                addressDestFull :  String,
+
+                addressOrigin: {
+                    type: Object,
                     notify: true,
                     reflectToAttribute : true,
                     observer : '_onAddressOriginChanged'
                 },
+                
                 addressDest : {
-                    type : String,
+                    type : Object,
                     notify: true,
                     reflectToAttribute : true,
                     observer : '_onAddressDestChanged'
@@ -75,7 +79,6 @@
             _errMsg             : null,
             
             clearInputOrigin : function (){
-                console.info(this.addressOrigin);
                 this.addressOrigin = '';
             },
             
@@ -87,14 +90,17 @@
             getCurrentLocationForOrigin : function(){
                 var that = this;
                  this._getCurrentLocation(function(pos){
-                     that.addressOrigin = pos;
+                    that.addressOriginFull = pos;
+                    that.addressOrigin = pos.compact;
+                    that.notifyPath('addressOriginFull')
                  });
             },
             
             getCurrentLocationForDest : function(){
                 var that = this;
                  this._getCurrentLocation(function(pos){
-                     that.addressDest = pos;
+                    that.addressDestFull = pos;
+                    that.addressDest = pos.compact;
                  });
             },
             
@@ -115,10 +121,11 @@
                 if (window.navigator.geolocation) {
                     // Got already his current location ?
                     if(that._CURRENT_LOCATION !== null)
-                        return cb(that._CURRENT_LOCATION);;
+                        return cb(that._CURRENT_LOCATION);
                     // Otherwise, go fetch his location
                     window.navigator.geolocation.getCurrentPosition(function(pos){
-                        that._CURRENT_LOCATION = pos.coords.latitude + "," + pos.coords.longitude;    
+                        that._CURRENT_LOCATION = {'lat':pos.coords.latitude,"lng": pos.coords.longitude};    
+                        that._CURRENT_LOCATION.compact = pos.coords.latitude + ', ' + pos.coords.longitude;
                         return cb(that._CURRENT_LOCATION);
                     }, that._onGetLocationError);
                 } else {

@@ -1,18 +1,34 @@
 [
   {
     "lat": 50.860577,
-    "lng": 4.391098
+    "lng": 4.391098,
+    "title":"Obstacle à la chaîne de déplacement",
+    "where":"Rue de la debrouille, 123 Bxl"
   },
   {
     "lat": 50.835865,
-    "lng": 4.301834
+    "lng": 4.301834,
+    "title":"Longueur de la pente supérieure à 12 %"
   },
   {
     "lat": 50.851192,
-    "lng": 4.342411
+    "lng": 4.342411,
+    "type":"CONSTRUCTION", 
+    "title":"Rue en construction",
+    "where":"Rue de Demain, 456 Bxl"
   },
+  
+  {
+    "lat": 50.851145,
+    "lng": 4.332421,
+    "type":"TRANSIT", 
+    "title":"Pas d'accès par ascenseur à la station de métro",
+    "where":"Station La-bás, 1234 Bxl"
+  },
+  
   {
     "lat": 50.870544,
-    "lng": 4.503021
+    "lng": 4.503021,
+    "title":"Obstacle à la chaîne de déplacement"
   }
 ]

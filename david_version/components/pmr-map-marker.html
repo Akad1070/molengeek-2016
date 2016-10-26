@@ -1,0 +1,72 @@
+<link rel="import" href="../bower_components/google-map/google-map.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+
+
+<dom-module id="pmr-map-marker">
+    <style>
+
+    </style>
+    
+    <template>
+        <google-map-marker map='[[markerMap]]'
+            latitude="[[marker.lat]]" longitude="[[marker.lng]]"
+        >
+            <h2>[[marker.title]]</h2>
+            <dl>
+                <dt>Ou : </dt>
+                    <dd>[[marker.where]]</dd>
+                <dt>Location : </dt>
+                    <dd>Latitude: [[marker.lat]]</dd>
+                    <dd>Longitude: [[marker.lng]]</dd>
+            </dl>
+            <paper-icon-button  icon="icons:check" on-tap="{{selectObstacle}}"></paper-icon-button>
+        </google-map-marker>
+    </template>
+    
+    
+    <script>
+        Polymer({
+            is: "pmr-map-marker",
+            properties : {
+                markerMap : Object,
+                marker : Object
+            },
+            
+            
+            ready : function(){
+                console.log(this.marker);
+            },
+            
+            toggleBounce : function() {
+                if (this.$.marker.getAnimation() !== null) {
+                    this.$.marker.setAnimation(null);
+                } else {
+                    this.$.marker.setAnimation(google.maps.Animation.BOUNCE);
+                }
+            },
+
+            selectObstacle : function(){
+                console.log('An obstacle has been selected !');
+                        this.fire('kick', {kicked: true});
+
+            },
+            
+            regularTap: function(e) {
+                console.log("Thank you for tapping");
+            },
+            
+            specialTap: function(e) {
+                alert("It was special tapping");
+            }
+
+            
+        });
+    </script>
+
+
+
+</dom-module>
+
+

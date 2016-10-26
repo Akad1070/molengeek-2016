@@ -1,0 +1,63 @@
+
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-icons/maps-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<link rel="import" href="./pmr-map-input.html">
+<link rel="import" href="./pmr-map-options.html">
+<link rel="import" href="./pmr-map.html">
+<link rel="import" href="./icons-custom.html">
+
+<dom-module id="my-pmr-app">
+    <template>
+        <style>
+            paper-card {
+                position: absolute;
+                left: 25px;
+                width: 25%;
+                z-index: 1;
+                margin-top: 50px;
+            }
+        </style>
+        
+        
+        
+        <paper-card elevation="5">
+            <pmr-map-input address-origin={{addressOrigin}} address-dest={{addresDest}}></pmr-map-input>
+            <pmr-map-options type-travel=[[travelMode]]></pmr-map-options>
+        </paper-card>
+        
+        <pmr-map origin={{addressOrigin}} destination={{addresDest}} map-markers={{data}}>
+            
+        </pmr-map>
+        
+        <iron-ajax id='reqData' 
+            auto
+            handle-as="json"
+            url="../data.json"
+            last-response="{{data}}"
+        >
+            <!--on-error="handleResponse"-->
+            <!--on-request="handleResponse"-->
+            <!--on-response="handleResponse"-->
+        </iron-ajax>
+        
+ 
+        
+        
+    </template>
+    
+    
+    <script>
+    
+        HTMLImports.whenReady(function () {
+            Polymer({
+                is: 'my-pmr-app'
+            });
+        });
+
+    </script>
+
+
+
+</dom-module>

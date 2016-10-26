@@ -9,7 +9,7 @@
 
 
 
-<dom-module id="pmr-options">
+<dom-module id="pmr-map-options">
     <template>
         <style>
             paper-tabs {
@@ -39,7 +39,7 @@
                 </paper-tab>
                 
                 <paper-tab label="BLIND">
-                    <iron-icon icon="maps:directions-walk"></iron-icon>
+                    <iron-icon src='../img/blind-man.png'></iron-icon>
                 </paper-tab>
             </paper-tabs>
             
@@ -49,7 +49,7 @@
             >
                 <span>Transport &nbsp;</span>
                 <paper-tab label="WALKING" id='travel-walking'>
-                    <iron-icon icon="maps:icons:accessibility"></iron-icon>
+                    <iron-icon icon="maps:directions-walk"></iron-icon>
                 </paper-tab>
                 
                 <paper-tab label="TRANSIT" id='travel-transit'>
@@ -80,7 +80,7 @@
     
     <script>
         Polymer({
-            is: "pmr-options",
+            is: "pmr-map-options",
             properties : {
                  typePmr: {
                     type: String,
