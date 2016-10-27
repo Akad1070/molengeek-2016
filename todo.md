@@ -29,7 +29,11 @@ Tasks
 
     Mettre la carte sur le coté pour laisser un espace pour 'noter'. 
         ~ (Laisser la Map en plein ecran et mettre un div swippable pour afficher les infos)
-    F(David) - Creer un composent pour les differents PMR et les mode de transport
+    F(David) - Creer un composent pour les differents PMR et les modes de transport
     F(David) - Ajouter les problemes/travaux sur le trajet
     F(David) - Rajouter un bouton pour permettre de localiser l'user et utiliser sa position actuelle comme adresse d'origine.
+    
+    
+    Pk ne pas changer la map pour celle-la de HereMaps, 
+    pour éviter directement les obstacles sans l'intervention de l'utilisateur ? 
     
