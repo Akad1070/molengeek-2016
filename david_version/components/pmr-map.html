@@ -9,6 +9,13 @@
 <link rel="import" href="./pmr-map-marker.html">
 
 
+
+<!-- Include HERE Maps JS API -->
+<script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.0/mapsjs-core.js"></script>
+<script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.0/mapsjs-service.js"></script>
+<script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
+<script type="text/javascript" charset="UTF-8" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
+
 <dom-module id="pmr-map">
     <style>
         google-map{
@@ -16,34 +23,50 @@
             display: block;
             height: 100%;
         }
+
+        :host{
+            -moz-user-select: none;
+            bottom: 0px;
+            left: 0px;
+            overflow: hidden;
+            right: 0px;
+            top: 0px;
+            position: absolute;
+        }
     </style>
     
     <template>
-        <google-map id='gmap'
-            map="{{map}}"
-            api-key='[[mapKey]]'
-            disable-default-ui
-            latitude=50.8504500 longitude=4.3487800
-            zoom=12
-        >
-            <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>
-                <pmr-map-marker  hidden
-                        marker-map="{{map}}" 
-                        marker="[[mapMarker]]"
-                        on-kick="{{tapTap}}"
-                        
-                >
- 
-                </pmr-map-marker>
-            </template>
-            
-        </google-map>
         
+        
+    <!--<here-map -->
+    <!--    app_id="DemoAppId01082013GAL" -->
+    <!--    app_code="AJKnXv84fjrb0KIHawS0Tg" map_layout="fixedHeight" height="600">-->
     
-
-
-
-
+    
+    </here-map>
+    
+    <div id="map" />
+        
+        <!--<google-map id='gmap'-->
+        <!--    map="{{map}}"-->
+        <!--    api-key='[[mapKey]]'-->
+        <!--    disable-default-ui-->
+        <!--    latitude=50.8504500 longitude=4.3487800-->
+        <!--    zoom=12-->
+        <!-->-->
+        <!--    <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>-->
+        <!--        <pmr-map-marker  hidden-->
+        <!--                marker-map="{{map}}" -->
+        <!--                marker="[[mapMarker]]"-->
+        <!--                on-kick="{{tapTap}}"-->
+                        
+        <!--        >-->
+ 
+        <!--        </pmr-map-marker>-->
+        <!--    </template>-->
+            
+        <!--</google-map>-->
+        
     </template>
     
     
@@ -53,6 +76,9 @@
                 is: "pmr-map",
                 properties : {
                     map : Object,
+                    mapId : 'IO6gmw0z15mcMOUlRGik',
+                    mapCode : 'NZQ-BYFCxuCTb_MwBXm3YQ',
+                    mapLayout : Object,
                     mapKey : {
                         type : String,
                         value : 'AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
@@ -66,6 +92,18 @@
                 _BXL_COORD : {lat : 50.8504500, lng : 4.3487800 },
                 
                 ready : function(){
+                    this.platform = new H.service.Platform({
+                        app_id: this.mapId,
+                        app_code: this.mapCode,
+                        useCIT: true,
+                        useHTTPS : true
+                    });
+                    this.defaultLayers = this.platform.createDefaultLayers();
+                    this.map = new H.Map(this.$.map, this.defaultLayers.normal.map);
+                    this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+                    this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
+                    this.map.setCenter(this._BXL_COORD);
+                    this.map.setZoom(this.zoom);
                     
                 },
                 
