@@ -16,5 +16,6 @@ pids
 build/Release
 
 # Dependency directories
+node_modules
 david_version/bower_components
 demo_version/bower_components
