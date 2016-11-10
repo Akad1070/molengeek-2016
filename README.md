@@ -6,7 +6,7 @@ Extend a map with more details on the road.
 ## Getting started
 Install bower to handle the packages :  
 
-`npm instal -G bower`
+`npm install -G bower`
 
 Install dependencies with : 
 
