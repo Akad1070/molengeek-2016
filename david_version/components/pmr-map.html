@@ -18,54 +18,38 @@
 
 <dom-module id="pmr-map">
     <style>
-        google-map{
+        #map{
             position: static;
-            display: block;
-            height: 100%;
+            display: block;   
+           width: 640px; 
+            height: 480px;
         }
 
-        :host{
-            -moz-user-select: none;
-            bottom: 0px;
-            left: 0px;
-            overflow: hidden;
-            right: 0px;
-            top: 0px;
-            position: absolute;
-        }
+
     </style>
     
     <template>
-        
-        
-    <!--<here-map -->
-    <!--    app_id="DemoAppId01082013GAL" -->
-    <!--    app_code="AJKnXv84fjrb0KIHawS0Tg" map_layout="fixedHeight" height="600">-->
     
-    
-    </here-map>
-    
-    <div id="map" />
+        <div id="map"> </div>
         
-        <!--<google-map id='gmap'-->
-        <!--    map="{{map}}"-->
-        <!--    api-key='[[mapKey]]'-->
-        <!--    disable-default-ui-->
-        <!--    latitude=50.8504500 longitude=4.3487800-->
-        <!--    zoom=12-->
-        <!-->-->
-        <!--    <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>-->
-        <!--        <pmr-map-marker  hidden-->
-        <!--                marker-map="{{map}}" -->
-        <!--                marker="[[mapMarker]]"-->
-        <!--                on-kick="{{tapTap}}"-->
-                        
-        <!--        >-->
+        <!--<google-map id='gmap'
+            map="{{map}}"
+            api-key='[[mapKey]]'
+            disable-default-ui
+            latitude=50.8504500 longitude=4.3487800
+            zoom=12
+        >
+            <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>
+                <pmr-map-marker  hidden
+                        marker-map="{{map}}" 
+                        marker="[[mapMarker]]"
+                        on-kick="{{tapTap}}"
+                >
  
-        <!--        </pmr-map-marker>-->
-        <!--    </template>-->
+                </pmr-map-marker>
+            </template>
             
-        <!--</google-map>-->
+        </google-map>-->
         
     </template>
     
@@ -76,8 +60,6 @@
                 is: "pmr-map",
                 properties : {
                     map : Object,
-                    mapId : 'IO6gmw0z15mcMOUlRGik',
-                    mapCode : 'NZQ-BYFCxuCTb_MwBXm3YQ',
                     mapLayout : Object,
                     mapKey : {
                         type : String,
@@ -89,22 +71,31 @@
                 },
                 
     
-                _BXL_COORD : {lat : 50.8504500, lng : 4.3487800 },
+                _MAP_ID : 'IO6gmw0z15mcMOUlRGik',
+                _MAP_CODE : 'NZQ-BYFCxuCTb_MwBXm3YQ',
+                _BXL_COORD : { lat: 52.5, lng: 13.4 },
                 
-                ready : function(){
-                    this.platform = new H.service.Platform({
-                        app_id: this.mapId,
-                        app_code: this.mapCode,
-                        useCIT: true,
-                        useHTTPS : true
+                attached : function(){
+                  this._initHereMaps();
+                },
+              
+              
+                _initHereMaps : function(){
+                  this.platform = new H.service.Platform({
+                        'app_id': this._MAP_ID,
+                        'app_code': this._MAP_CODE
                     });
                     this.defaultLayers = this.platform.createDefaultLayers();
-                    this.map = new H.Map(this.$.map, this.defaultLayers.normal.map);
-                    this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
-                    this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
-                    this.map.setCenter(this._BXL_COORD);
-                    this.map.setZoom(this.zoom);
+                    this.map = new H.Map(this.$.map, this.defaultLayers.normal.map,
+                    {
+                      zoom: 14,
+                      center: this._BXL_COORD
+                    });
+                  console.log(document.getElementById('map'));
                     
+                  this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+                  this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
+                                      
                 },
                 
                 selectObstacle : function(){

@@ -13,13 +13,6 @@ body {
 
 
 
-
-google-map{
-    position: static;
-    display: block;
-    height: 100%;
-}
-
 paper-card {
   position: absolute;
   bottom: 0px;
