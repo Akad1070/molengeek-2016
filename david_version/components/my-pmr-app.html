@@ -24,10 +24,15 @@
         
         <paper-card elevation="5">
             <pmr-map-input address-origin={{addressOrigin}} address-dest={{addresDest}}></pmr-map-input>
-            <pmr-map-options type-travel=[[travelMode]]></pmr-map-options>
+            <pmr-map-options type-pmr={{pmrMode}}  type-travel={{travelMode}}></pmr-map-options>
         </paper-card>
         
-        <pmr-map origin={{addressOrigin}} destination={{addresDest}} map-markers={{data}}>
+        <pmr-map 
+                 origin={{addressOrigin}} destination={{addresDest}} 
+                 map-markers={{data}} 
+                 travel=[[travelMode]]
+                 pmr=[[pmrMode]]
+        >
             
         </pmr-map>
         

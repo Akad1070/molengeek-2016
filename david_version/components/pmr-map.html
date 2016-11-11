@@ -21,8 +21,8 @@
         #map{
             position: static;
             display: block;   
-           width: 640px; 
-            height: 480px;
+            width: 1400px; 
+            height: 1500px;
         }
 
 
@@ -59,21 +59,90 @@
             Polymer({
                 is: "pmr-map",
                 properties : {
-                    map : Object,
-                    mapLayout : Object,
-                    mapKey : {
-                        type : String,
-                        value : 'AIzaSyCsbzuJDUEOoq-jS1HO-LUXW4qo0gW9FNs'
+                  
+                    /**
+                     * A Maps API object.
+                     */
+                    map: {
+                      type: Object,
+                      notify: true,
+                      value: null
                     },
-                    travel : String,
-                    mapMarkers : Object
+              
+                    /**
+                     * A latitude to center the map on.
+                     * On default, BXL latitude
+                     */
+                    latitude: {
+                      type: Number,
+                      value: 50.8504500,
+                      notify: true,
+                      reflectToAttribute: true
+                    },
+              
+                    /**
+                     * A longitude to center the map on.
+                     * On default, BXL longitude
+                     */
+                    longitude: {
+                      type: Number,
+                      value: 4.3487800,
+                      notify: true,
+                      reflectToAttribute: true
+                    },   
+              
+                    /**
+                     * A travel mode for the routing .
+                     */
+                    travel: {
+                      type: String,
+                      value: '',
+                      notify: true,
+                      reflectToAttribute: true,
+                      observer: '_travelChanged'
+                    },   
+              
+                    /**
+                     * All markers on the map.
+                     */
+                    mapMarkers : {
+                      type: Array,
+                      value: function() { return []; },
+                      notify: true,
+                      reflectToAttribute: true,
+                      observer: '_markersChanged'
+                    },
+                                
+                    /**
+                     * The destination adress for the routing 
+                     */
+                    destination : {
+                      type: String,
+                      notify: true,
+                      reflectToAttribute: true,
+                      observer: '_destinationChanged'
+                    },
+                                
+                    /**
+                     * The origin adress for the routing
+                     */
+                    origin : {
+                      type: String,
+                      notify: true,
+                      reflectToAttribute: true,
+                      observer: '_originChanged'
+                    },
+                                                  
+                  
+                  
+              
+              
                 
                 },
                 
-    
+  
                 _MAP_ID : 'IO6gmw0z15mcMOUlRGik',
                 _MAP_CODE : 'NZQ-BYFCxuCTb_MwBXm3YQ',
-                _BXL_COORD : { lat: 52.5, lng: 13.4 },
                 
                 attached : function(){
                   this._initHereMaps();
@@ -83,28 +152,66 @@
                 _initHereMaps : function(){
                   this.platform = new H.service.Platform({
                         'app_id': this._MAP_ID,
-                        'app_code': this._MAP_CODE
+                        'app_code': this._MAP_CODE,
+                         useHTTPS : true
                     });
-                    this.defaultLayers = this.platform.createDefaultLayers();
+                    this.defaultLayers = this.platform.createDefaultLayers({lg:'fre'});
                     this.map = new H.Map(this.$.map, this.defaultLayers.normal.map,
                     {
                       zoom: 14,
-                      center: this._BXL_COORD
+                      center: {lat:this.latitude, lng:this.longitude}
                     });
                   console.log(document.getElementById('map'));
                     
                   this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
                   this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
-                                      
+                  
                 },
                 
-                selectObstacle : function(){
-                    console.log('An obstacle has been selected !');
+                markOnMap : function (result){
+                  // Define a callback function to process the geocoding response:
+									var locations = result.Response.View[0].Result,
+										position,
+										marker;
+									// Add a marker for each location found
+									for (i = 0;  i < locations.length; i++) {
+										position = {
+											lat: locations[i].Location.DisplayPosition.Latitude,
+											lng: locations[i].Location.DisplayPosition.Longitude
+										};
+										marker = new H.map.Marker(position);
+										this.map.addObject(marker);
+									}
                 },
-                
-                tapTap : function (e){
-                    console.log('Tap tap : ',e);
-                }
+							
+              
+                // Called when the markers are set/changed
+                _markersChanged : function(nMarkers){
+              
+                    console.log('Markers set'+nMarkers);
+                },
+							              
+                // Called when the travel mode are set/changed
+                _travelChanged : function(mode){
+              
+                    console.log('Travel mode set to : '+ mode);
+                },
+							
+							
+							
+							
+							// Called when the origin adress are set/changed
+                _originChanged : function(nAdress){
+              			if(nAdress && nAdress.length > 5)
+                    	console.log('Origin : '+nAdress);
+                },							
+							
+							// Called when the destination are set/changed
+                _destinationChanged : function(nAdress){
+              			if(this.origin && nAdress && nAdress.length > 5)
+                    	console.log('Dest : '+nAdress);
+                },
+							
 
                 
             });
