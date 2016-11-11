@@ -18,7 +18,7 @@
 
 <dom-module id="pmr-map">
     <style>
-        #map{
+        #mapContainer{
             position: static;
             display: block;   
             width: 1400px; 
@@ -30,7 +30,7 @@
     
     <template>
     
-        <div id="map"> </div>
+        <div id="mapContainer"> </div>
         
         <!--<google-map id='gmap'
             map="{{map}}"
@@ -132,84 +132,110 @@
                       reflectToAttribute: true,
                       observer: '_originChanged'
                     },
-                                                  
-                  
-                  
-              
-              
+                        
                 
                 },
-                
-  
-                _MAP_ID : 'IO6gmw0z15mcMOUlRGik',
-                _MAP_CODE : 'NZQ-BYFCxuCTb_MwBXm3YQ',
-                
+               // FIXED VALUES
+                _MAP_ID : 'IO6gmw0z15mcMOUlRGik', _MAP_CODE : 'NZQ-BYFCxuCTb_MwBXm3YQ',
+				
+				
+				// Entry point for the creation of the component
+				// Called when the component is ready
                 attached : function(){
                   this._initHereMaps();
                 },
               
-              
                 _initHereMaps : function(){
-                  this.platform = new H.service.Platform({
-                        'app_id': this._MAP_ID,
-                        'app_code': this._MAP_CODE,
-                         useHTTPS : true
-                    });
-                    this.defaultLayers = this.platform.createDefaultLayers({lg:'fre'});
-                    this.map = new H.Map(this.$.map, this.defaultLayers.normal.map,
-                    {
-                      zoom: 14,
-                      center: {lat:this.latitude, lng:this.longitude}
-                    });
-                  console.log(document.getElementById('map'));
-                    
-                  this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
-                  this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
-                  
+					if (this.map || !this.isAttached) {
+						return; // already initialized the map or not yet attached
+					}
+					this.platform = new H.service.Platform({
+						'app_id': this._MAP_ID,
+						'app_code': this._MAP_CODE,
+						useHTTPS : true
+					});
+					
+					this.defaultLayers = this.platform.createDefaultLayers({lg:'fre'});
+					this.map = new H.Map(this.$.mapContainer, this.defaultLayers.normal.map,
+					{
+						zoom: 14,
+						center: {lat:this.latitude, lng:this.longitude}
+					});
+					
+					console.log(this.map)
+					
+					this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+					this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
+
+					// Get an instance of the geocoding service:
+					this.geocoder = this.platform.getGeocodingService();
+				},
+
+				
+				/**
+				 * Put a marker on the map.
+				 */
+                _markOnMap : function (result){
+					// Define a callback function to process the geocoding response:
+					var locations = result.Response.View[0].Result,
+						position,
+						marker;
+					console.log(this.map);
+					// Add a marker for each location found in result
+					for (i = 0;  i < locations.length; i++) {
+						position = {
+							lat: locations[i].Location.DisplayPosition.Latitude,
+							lng: locations[i].Location.DisplayPosition.Longitude
+						};
+						marker = new H.map.Marker(position);
+						this.map.addObject(marker);
+					}
                 },
-                
-                markOnMap : function (result){
-                  // Define a callback function to process the geocoding response:
-									var locations = result.Response.View[0].Result,
-										position,
-										marker;
-									// Add a marker for each location found
-									for (i = 0;  i < locations.length; i++) {
-										position = {
-											lat: locations[i].Location.DisplayPosition.Latitude,
-											lng: locations[i].Location.DisplayPosition.Longitude
-										};
-										marker = new H.map.Marker(position);
-										this.map.addObject(marker);
-									}
-                },
-							
-              
+				
+				
                 // Called when the markers are set/changed
                 _markersChanged : function(nMarkers){
-              
-                    console.log('Markers set'+nMarkers);
+              			
+                    console.log('Markers ',nMarkers);
                 },
 							              
                 // Called when the travel mode are set/changed
                 _travelChanged : function(mode){
               
-                    console.log('Travel mode set to : '+ mode);
+                    console.log('Travel mode set to : ', mode);
                 },
 							
 							
 							
 							
-							// Called when the origin adress are set/changed
+				// Called when the origin adress are set/changed
                 _originChanged : function(nAdress){
-              			if(nAdress && nAdress.length > 5)
-                    	console.log('Origin : '+nAdress);
+					if(nAdress && nAdress.length > 5){
+                    	console.log('Origin : ',nAdress);
+						this.origin = nAdress;
+											console.log(this.map)
+
+						this.geocoder.geocode(
+							{searchText: this.origin}, 
+							this._markOnMap, 
+							function(err) {
+  								console.warn(err);
+						});
+					}
                 },							
 							
-							// Called when the destination are set/changed
+				// Called when the destination are set/changed
                 _destinationChanged : function(nAdress){
-              			if(this.origin && nAdress && nAdress.length > 5)
-                    	console.log('Dest : '+nAdress);
+					if(this.origin && nAdress && nAdress.length > 5){
+						console.log('Dest  : ',nAdress);
+						this.origin = nAdress;
+						this.geocoder.geocode(
+							{searchText: this.origin}, 
+							this._markOnMap, 
+							function(err) {
+  								console.warn(err);
+						});	
+					}
                 },
 							
 
