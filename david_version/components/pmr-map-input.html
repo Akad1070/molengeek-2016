@@ -71,12 +71,21 @@
                     notify: true,
                     reflectToAttribute : true,
                     observer : '_onAddressDestChanged'
-                }
+                },
+              
+              /**
+               * The error message to display when the input is invalid. If you're using
+               * PaperInputBehavior to implement your own paper-input-like element,
+               * bind this to the `<paper-input-error>`'s content, if using.
+               */
+              errorMessage: {
+                type: String
+              },
+              
                 
             },
 
             _CURRENT_LOCATION   : null,
-            _errMsg             : null,
             
             clearInputOrigin : function (){
                 this.addressOrigin = '';
@@ -129,26 +138,28 @@
                         return cb(that._CURRENT_LOCATION);
                     }, that._onGetLocationError);
                 } else {
-                    that._errMsg = "La Geolocation n'est pas supporte par votre navigateur.";
+                    that.errorMessage = "La Geolocation n'est pas supporte par votre navigateur.";
+                    this.fire('error', this.errorMessage);
                 }
             },
 
             _onGetLocationError : function(err){
                 switch(err.code) {
                     case err.PERMISSION_DENIED:
-                        this._errMsg = "Vous avez refuse la requete pour la Geolocation.";
+                        this.errorMessage = "Vous avez refuse la requete pour la Geolocation.";
                     break;
                     case err.POSITION_UNAVAILABLE:
-                        this._errMsg = "La Geolocation est indisponible.";
+                        this.errorMessage = "La Geolocation est indisponible.";
                     break;
                     case err.TIMEOUT:
-                        this._errMsg = "La requete de Geolocation a expiree.";
+                        this.errorMessage = "La requete de Geolocation a expiree.";
                     break;
                     case err.UNKNOWN_ERROR:
-                        this._errMsg = "Une erreur bizarre est survenue.";
+                        this.errorMessage = "Une erreur bizarre est survenue.";
                     break;
                 }
-                console.error(this._errMsg);
+                console.warn(this.errorMessage);
+                this.fire('error', this.errorMessage);
             }
             
         });

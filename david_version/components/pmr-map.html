@@ -147,6 +147,7 @@
               
                 _initHereMaps : function(){
 					if (this.map || !this.isAttached) {
+						this.fire('error', 'Already initialized the map or not yet attached');
 						return; // already initialized the map or not yet attached
 					}
 					this.platform = new H.service.Platform({
@@ -154,16 +155,16 @@
 						'app_code': this._MAP_CODE,
 						useHTTPS : true
 					});
-					
+
 					this.defaultLayers = this.platform.createDefaultLayers({lg:'fre'});
 					this.map = new H.Map(this.$.mapContainer, this.defaultLayers.normal.map,
 					{
 						zoom: 14,
 						center: {lat:this.latitude, lng:this.longitude}
 					});
-					
+
 					console.log(this.map)
-					
+
 					this.behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
 					this.ui = H.ui.UI.createDefault(this.map, this.defaultLayers);
 
@@ -171,7 +172,7 @@
 					this.geocoder = this.platform.getGeocodingService();
 				},
 
-				
+
 				/**
 				 * Put a marker on the map.
 				 */
@@ -180,7 +181,7 @@
 					var locations = result.Response.View[0].Result,
 						position,
 						marker;
-					console.log(this.map);
+					console.log(result.Response.View);
 					// Add a marker for each location found in result
 					for (i = 0;  i < locations.length; i++) {
 						position = {
@@ -190,36 +191,31 @@
 						marker = new H.map.Marker(position);
 						this.map.addObject(marker);
 					}
+					this.map.setCenter(position);
                 },
 				
 				
                 // Called when the markers are set/changed
                 _markersChanged : function(nMarkers){
-              			
                     console.log('Markers ',nMarkers);
                 },
 							              
                 // Called when the travel mode are set/changed
                 _travelChanged : function(mode){
-              
                     console.log('Travel mode set to : ', mode);
                 },
-							
-							
-							
 							
 				// Called when the origin adress are set/changed
                 _originChanged : function(nAdress){
 					if(nAdress && nAdress.length > 5){
-                    	console.log('Origin : ',nAdress);
+						console.log('Origin : ',nAdress);
 						this.origin = nAdress;
-											console.log(this.map)
 
 						this.geocoder.geocode(
 							{searchText: this.origin}, 
-							this._markOnMap, 
+							this._markOnMap.bind(this), 
 							function(err) {
-  								console.warn(err);
+								console.warn(err);
 						});
 					}
                 },							
@@ -229,11 +225,12 @@
 					if(this.origin && nAdress && nAdress.length > 5){
 						console.log('Dest  : ',nAdress);
 						this.origin = nAdress;
+						
 						this.geocoder.geocode(
 							{searchText: this.origin}, 
-							this._markOnMap, 
+							this._markOnMap.bind(this), 
 							function(err) {
-  								console.warn(err);
+								console.warn(err);
 						});	
 					}
                 },
