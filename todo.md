@@ -15,11 +15,7 @@ http://rogerdudler.github.io/git-guide/
 
 https://www.polymer-project.org/1.0/docs/devguide/feature-overview
 
-https://developers.google.com/maps/documentation/javascript/examples/directions-waypoints
-
 https://codelabs.developers.google.com/codelabs/polymer-maps/index.html?index=..%2F..%2Findex#1
-
-http://stackoverflow.com/questions/2440967/blacklisting-specific-roads-from-google-maps-mapquest
 
 
 
