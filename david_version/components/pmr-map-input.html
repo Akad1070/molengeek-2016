@@ -11,9 +11,9 @@
     <template>
 
         <paper-input 
-                label="Adresse de Depart" 
-                value="{{addressOrigin}}"
-                required auto-validate error-message="Besoin d'une adresse de depart"
+            label="Adresse de Depart" 
+            value="{{addressOrigin}}"
+            required auto-validate error-message="Besoin d'une adresse de depart"
         >
             <paper-icon-button prefix 
                 icon="maps:my-location"
@@ -59,6 +59,7 @@
                 addressOriginFull: String,
                 addressDestFull :  String,
 
+                 // The input for the origin address.
                 addressOrigin: {
                     type: Object,
                     notify: true,
@@ -66,21 +67,20 @@
                     observer : '_onAddressOriginChanged'
                 },
                 
+                // The input for the destination address.
                 addressDest : {
                     type : Object,
                     notify: true,
                     reflectToAttribute : true,
                     observer : '_onAddressDestChanged'
                 },
-              
-              /**
-               * The error message to display when the input is invalid. If you're using
-               * PaperInputBehavior to implement your own paper-input-like element,
-               * bind this to the `<paper-input-error>`'s content, if using.
-               */
-              errorMessage: {
-                type: String
-              },
+                
+                // The error message to display when the input is invalid.
+                errorMsg: {
+                    type: String,
+                    notify: true,
+                    reflectToAttribute : true
+                }
               
                 
             },
@@ -101,7 +101,6 @@
                  this._getCurrentLocation(function(pos){
                     that.addressOriginFull = pos;
                     that.addressOrigin = pos.compact;
-                    that.notifyPath('addressOriginFull')
                  });
             },
             
@@ -119,12 +118,14 @@
                 this.$.btnClearOrigin.hidden = (!nOrigin);
                 this.addressOrigin = nOrigin;    
             },
+            
             _onAddressDestChanged : function (nDest){
                 // Hide the clear button on empty input
                 this.$.btnClearDest.hidden = (!nDest); 
                 this.addressDest = nDest;    
             },
             
+            // Get the current location from the native GeoLocalisation in Windows
             _getCurrentLocation : function(cb){
                 var that = this;
                 if (window.navigator.geolocation) {
@@ -138,34 +139,31 @@
                         return cb(that._CURRENT_LOCATION);
                     }, that._onGetLocationError);
                 } else {
-                    that.errorMessage = "La Geolocation n'est pas supporte par votre navigateur.";
-                    this.fire('error', this.errorMessage);
+                    that.errorMsg = "La Geolocation n'est pas supporte par votre navigateur.";
                 }
             },
 
             _onGetLocationError : function(err){
                 switch(err.code) {
                     case err.PERMISSION_DENIED:
-                        this.errorMessage = "Vous avez refuse la requete pour la Geolocation.";
+                        this.errorMsg = "Vous avez refuse la requete pour la Geolocation.";
                     break;
                     case err.POSITION_UNAVAILABLE:
-                        this.errorMessage = "La Geolocation est indisponible.";
+                        this.errorMsg = "La Geolocation est indisponible.";
                     break;
                     case err.TIMEOUT:
-                        this.errorMessage = "La requete de Geolocation a expiree.";
+                        this.errorMsg = "La requete de Geolocation a expiree.";
                     break;
                     case err.UNKNOWN_ERROR:
-                        this.errorMessage = "Une erreur bizarre est survenue.";
+                        this.errorMsg = "Une erreur bizarre est survenue.";
                     break;
                 }
-                console.warn(this.errorMessage);
-                this.fire('error', this.errorMessage);
+                
+                
             }
             
         });
     </script>
-
-
 
 </dom-module>
 

@@ -23,19 +23,31 @@
         
         
         <paper-card elevation="5">
-            <pmr-map-input address-origin={{addressOrigin}} address-dest={{addresDest}} on-error='_onNotification'></pmr-map-input>
-            <pmr-map-options type-pmr={{pmrMode}}  type-travel={{travelMode}}></pmr-map-options>
+            <pmr-map-input 
+                address-origin={{addressOrigin}} address-dest={{addresDest}} 
+                error-msg={{notifMsg}}
+            >
+                
+            </pmr-map-input>
+            <pmr-map-options 
+                type-pmr={{pmrMode}}  
+                type-travel={{travelMode}}
+                error-msg={{notifMsg}}
+            >
+                
+            </pmr-map-options>
         </paper-card>
         
-        <pmr-map 
-           origin={{addressOrigin}} destination={{addresDest}} 
-           map-markers={{data}} 
-           travel=[[travelMode]]
-           pmr=[[pmrMode]]
-           on-error='_onNotification'
-        >
+        <h1>{{notifMsg}}</h1>
+        <!--<pmr-map -->
+        <!--   origin={{addressOrigin}} destination={{addresDest}} -->
+        <!--   map-markers={{data}} -->
+        <!--   travel=[[travelMode]]-->
+        <!--   pmr=[[pmrMode]]-->
+        <!--   error-msg={{notifMsg}}-->
+        <!-->-->
             
-        </pmr-map>
+        <!--</pmr-map>-->
         
         <iron-ajax id='reqData' 
             auto
@@ -47,7 +59,8 @@
             <!--on-request="handleResponse"-->
             <!--on-response="handleResponse"-->
         </iron-ajax>
-      
+        
+        
         <paper-toast id="notif" text="[[notifMsg]]"></paper-toast>
         
  
@@ -74,7 +87,7 @@
 				},
 				
 				_onNotification : function(msg){
-					console.log(msg);
+					console.log(this.$.notif);
 					this.$.notif.open({text: msg, duration: 3000});
 				}
 				

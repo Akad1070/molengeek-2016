@@ -104,13 +104,20 @@
                         return _DEFAULT_TIME ;
                         
                     }
-                }
+                },
+                errorMsg : {
+                    type : String,
+                    notify: true,
+                    reflectToAttribute : true
+                },
+                
                 
             },
              // Called when this component is fully rendered
             ready : function(app){
                 this.btnTravelByDriving = this.$.travel_driving;
                 this.optionsSupp = this.$.options_supp;
+                this.errorMsg = 'Test error pmr options';
             },
             
             _DEFAULT_PMR    : 'CHAIR',
