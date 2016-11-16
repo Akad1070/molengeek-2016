@@ -24,30 +24,28 @@
         
         <paper-card elevation="5">
             <pmr-map-input 
-                address-origin={{addressOrigin}} address-dest={{addresDest}} 
-                error-msg={{notifMsg}}
+                address-origin={{addressOrigin}} address-dest={{addresDest}}
             >
                 
             </pmr-map-input>
             <pmr-map-options 
                 type-pmr={{pmrMode}}  
                 type-travel={{travelMode}}
-                error-msg={{notifMsg}}
             >
                 
             </pmr-map-options>
         </paper-card>
         
         <h1>{{notifMsg}}</h1>
-        <!--<pmr-map -->
-        <!--   origin={{addressOrigin}} destination={{addresDest}} -->
-        <!--   map-markers={{data}} -->
-        <!--   travel=[[travelMode]]-->
-        <!--   pmr=[[pmrMode]]-->
-        <!--   error-msg={{notifMsg}}-->
-        <!-->-->
+        <pmr-map 
+           origin={{addressOrigin}} destination={{addresDest}} 
+           map-markers={{data}} 
+           travel=[[travelMode]]
+           pmr=[[pmrMode]]
+           
+        >
             
-        <!--</pmr-map>-->
+        </pmr-map>
         
         <iron-ajax id='reqData' 
             auto
@@ -73,28 +71,13 @@
     
         HTMLImports.whenReady(function () {
             Polymer({
-                is: 'my-pmr-app',
-                properties : {
-					notifMsg : {
-						type : String,
-						observer : '_onNotification'
-					}
-                },
-				
-				ready : function(){
-					
-					
-				},
-				
-				_onNotification : function(msg){
-					console.log(this.$.notif);
-					this.$.notif.open({text: msg, duration: 3000});
-				}
-				
+                is: 'my-pmr-app'
+  
             });
         });
 
     </script>
+
 
 
 

@@ -147,7 +147,6 @@
               
                 _initHereMaps : function(){
 					if (this.map || !this.isAttached) {
-						this.fire('error', 'Already initialized the map or not yet attached');
 						return; // already initialized the map or not yet attached
 					}
 					this.platform = new H.service.Platform({
