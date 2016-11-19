@@ -1,7 +1,6 @@
 Getting Started
 ==============
 
- First, ALWAYS launch this cmd before begin the work : git pull
  Install bower : npm instal -G bower
  Install dependencies : cd david_version/ && bower install
  
