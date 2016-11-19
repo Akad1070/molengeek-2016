@@ -1,8 +1,8 @@
 Getting Started
 ==============
 
- Install bower : npm instal -G bower
- Install dependencies : cd david_version/ && bower install
+ Install bower : npm instal -G bower  
+ Install dependencies : cd david_version/ && bower install  
  
 
 
