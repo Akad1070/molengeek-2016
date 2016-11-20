@@ -30,7 +30,7 @@ Tasks
   - Effectuer le calcul du routing entre l'orgine et la destination.
     - [ ] Inclure les options dependant du type de PMR dans le routing.
     - [ ] Inclure automatiquement les chemins à éviter dans le routing.
-
+  - [ ] Ajouter un systeme de notification pour les messages.  
 
   Pk ne pas changer la map pour celle-la de HereMaps, 
   pour éviter directement les obstacles sans l'intervention de l'utilisateur ? 
