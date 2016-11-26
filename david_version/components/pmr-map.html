@@ -19,10 +19,14 @@
 <dom-module id="pmr-map">
     <style>
         #mapContainer{
-            position: static;
+            position: absolute;    
             display: block;   
-            width: 1400px; 
-            height: 1500px;
+            width: 100%; 
+            height: 100%;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
         }
 
 
@@ -30,27 +34,26 @@
     
     <template>
     
-        <div id="mapContainer"> </div>
+        <div id="mapContainer"> 
         
-        <!--<google-map id='gmap'
-            map="{{map}}"
-            api-key='[[mapKey]]'
-            disable-default-ui
-            latitude=50.8504500 longitude=4.3487800
-            zoom=12
-        >
+        <!--
             <template is="dom-repeat" items="[[mapMarkers]]" as='mapMarker'>
-                <pmr-map-marker  hidden
-                        marker-map="{{map}}" 
-                        marker="[[mapMarker]]"
-                        on-kick="{{tapTap}}"
+                <pmr-map-marker
+                    marker-map="{{map}}" 
+                    marker="[[mapMarker]]"
                 >
  
                 </pmr-map-marker>
             </template>
             
-        </google-map>-->
+            -->
+        </div>
         
+          <!--
+        <iron-selector id="selector" multi="[[!onlySinglePopup]]" selected-attribute="open" activate-event="pmr-map-marker-open">
+            <content id="markers" select="pmr-map-marker"></content>
+        </iron-selector>
+        -->
     </template>
     
     
@@ -103,15 +106,25 @@
                     },   
               
                     /**
-                     * All markers on the map.
+                     * All markers already pinned on the map.
                      */
                     mapMarkers : {
                       type: Array,
                       value: function() { return []; },
                       notify: true,
+                      readOnly: true,
                       reflectToAttribute: true,
                       observer: '_markersChanged'
                     },
+                    
+                    /**
+                     * To only show one popup at time about the marker selected
+                     */
+                    onlySinglePopup: {
+                      type: Boolean,
+                      value: function() { return false; }
+                    },
+                    
                                 
                     /**
                      * The destination adress for the routing 
@@ -121,6 +134,14 @@
                       notify: true,
                       reflectToAttribute: true,
                       observer: '_destinationChanged'
+                    },
+                    
+                    /**
+                     * The destination marker on Map 
+                     */
+                    destinationMarker : {
+                      type: Object,
+                      reflectToAttribute: false
                     },
                                 
                     /**
@@ -132,13 +153,23 @@
                       reflectToAttribute: true,
                       observer: '_originChanged'
                     },
+                    
+                    /**
+                     * The origin marker on Map 
+                     */
+                    originMarker : {
+                      type: Object,
+                      reflectToAttribute: false
+                    },
+                                
                         
                 
                 },
+                
                // FIXED VALUES
                 _MAP_ID : 'IO6gmw0z15mcMOUlRGik', _MAP_CODE : 'NZQ-BYFCxuCTb_MwBXm3YQ',
-				
-				
+				_MARKER_TYPE_ORGIN : 'MARKER_ON_ORIGIN', _MARKER_TYPE_DEST : 'MARKER_ON_DEST',
+
 				// Entry point for the creation of the component
 				// Called when the component is ready
                 attached : function(){
@@ -173,12 +204,12 @@
 				/**
 				 * Put a marker on the map.
 				 */
-                _markOnMap : function (result){
+                _markOnMap : function (response,type){
 					// Define a callback function to process the geocoding response:
-					var locations = result.Response.View[0].Result,
+					var locations = response.View[0].Result,
 						position,
 						marker;
-					console.log(result.Response.View);
+					console.log(response.View);
 					// Add a marker for each location found in result
 					for (i = 0;  i < locations.length; i++) {
 						position = {
@@ -186,31 +217,72 @@
 							lng: locations[i].Location.DisplayPosition.Longitude
 						};
 						marker = new H.map.Marker(position);
+						this.mapMarkers.push(marker);
 						this.map.addObject(marker);
 					}
-					this.map.setCenter(position);
+					this.map.setCenter(position,true);
+    			    // Depending on the type given, set this marker as the origin || destination
+					if(type){
+					    if(type === this._MARKER_TYPE_DEST){
+					        this.destinationMarker = marker;
+					        // Customize this marker to make it different from others.
+					    }else{
+					        if(type === this._MARKER_TYPE_ORGIN)
+					            this.originMarker = marker;
+					    }
+
+					}
                 },
 				
 				
                 // Called when the markers are set/changed
-                _markersChanged : function(nMarkers){
-                    console.log('Markers ',nMarkers);
+                _markersChanged : function(nMarkers,oldMarkers){
+                    console.log('oMarkers ',oldMarkers);
+                    console.log('nMarkers ',nMarkers);
                 },
 							              
                 // Called when the travel mode are set/changed
                 _travelChanged : function(mode){
                     console.log('Travel mode set to : ', mode);
                 },
+                
+                
+                // Check if this response matching a street or house
+                _isResultForAddressValid : function(result) {
+                    // ? Got a Response && only 1 response ?
+                    var isValid = (result.Response && result.Response.View && result.Response.View.length === 1);
+					// ? Got a Result && only 1 result ?
+					if(isValid && result.Response.View[0].Result.length === 1){
+					    var address = result.Response.View[0].Result[0];
+					    // ? is this address match a district, street or house ?
+					    isValid = (address.MatchLevel === 'district' || address.MatchLevel === 'street');
+					    if(isValid || (address.MatchLevel === 'houseNumber')) {
+					        // ? is inside Bruxelles?
+					        return address.Location.Address.Country === 'BEL';
+					    }
+					}
+					return false;
+                },
 							
 				// Called when the origin adress are set/changed
                 _originChanged : function(nAdress){
+                    // Before searching, delete old marker pinned for origin
+                    if(this.originMarker){
+				        this.map.removeObject(this.originMarker);
+				        this.mapMarkers.splice(this.mapMarkers.indexOf(this.originMarker),1);
+				        this.originMarker = null;
+                    }
+                    
+                    // ? Input enough char to launch a search ?
 					if(nAdress && nAdress.length > 5){
-						console.log('Origin : ',nAdress);
-						this.origin = nAdress;
 
 						this.geocoder.geocode(
 							{searchText: this.origin}, 
-							this._markOnMap.bind(this), 
+							function(result){
+						        if(this._isResultForAddressValid(result)){
+							        this._markOnMap.bind(this).call(this,result.Response,this._MARKER_TYPE_ORGIN);
+							    }
+							}.bind(this), 
 							function(err) {
 								console.warn(err);
 						});
@@ -219,21 +291,32 @@
 							
 				// Called when the destination are set/changed
                 _destinationChanged : function(nAdress){
-					if(this.origin && nAdress && nAdress.length > 5){
-						console.log('Dest  : ',nAdress);
-						this.origin = nAdress;
-						
+                    // Before searching, delete old marker pinned for destination
+                    if(this.destinationMarker){
+				        this.map.removeObject(this.destinationMarker);
+				        this.mapMarkers.splice(this.mapMarkers.indexOf(this.destinationMarker),1);
+				        this.destinationMarker = null;
+                    }
+                    
+					if(nAdress && nAdress.length > 5){
 						this.geocoder.geocode(
-							{searchText: this.origin}, 
-							this._markOnMap.bind(this), 
+							{searchText: this.destination}, 
+							function(result){
+						        if(this._isResultForAddressValid(result)){
+							        this._markOnMap.bind(this).call(this,result.Response,this._MARKER_TYPE_DEST);
+							    }
+							}.bind(this), 
 							function(err) {
 								console.warn(err);
-						});	
+						});		
+					}
+					
+					// ? Got the markers for origin && destination
+					if(this.originMarker && this.destinationMarker){
+					        
 					}
                 },
-							
-
-                
+    
             });
         });
     </script>

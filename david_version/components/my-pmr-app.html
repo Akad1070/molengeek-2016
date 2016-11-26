@@ -1,5 +1,7 @@
 
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../bower_components/iron-icons/maps-icons.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
@@ -36,7 +38,6 @@
             </pmr-map-options>
         </paper-card>
         
-        <h1>{{notifMsg}}</h1>
         <pmr-map 
            origin={{addressOrigin}} destination={{addresDest}} 
            map-markers={{data}} 
@@ -61,8 +62,6 @@
         
         <paper-toast id="notif" text="[[notifMsg]]"></paper-toast>
         
- 
-        
         
     </template>
     
@@ -71,8 +70,14 @@
     
         HTMLImports.whenReady(function () {
             Polymer({
-                is: 'my-pmr-app'
-  
+                is: 'my-pmr-app',
+                properties : {
+                    notifMsg : 'Cooool Koil'
+                },
+                
+                openToast: function() {
+                    this.$.notif.show(this.notifMsg);
+                }
             });
         });
 
